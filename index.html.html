@@ -1,0 +1,1898 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ITSS 4351 Midterm Study</title>
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --surface-2:#f0eee8; --ink:#1c1c1e; --ink-2:#3a3a3e; --muted:#6c6b70; --line:#e2dfd7;
+  --accent:#2d5b86; --accent-ink:#ffffff; --accent-soft:#e3ecf5;
+  --ok:#1d7446; --ok-bg:#e5f3ea; --ok-line:#9fd3b3;
+  --bad:#b0271d; --bad-bg:#fbe8e5; --bad-line:#eeb0a8;
+  --warn:#9a6200;
+  --lv-unseen:#d8d4cb; --lv-0:#d9695f; --lv-1:#e2a93b; --lv-2:#5b93c7; --lv-ret:#2f8f5b;
+  --heavy:#8a3b12; --heavy-bg:#fbe9dc;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
+  --serif:"Iowan Old Style","Charter","Palatino Linotype","Book Antiqua",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141517; --surface:#1d1e22; --surface-2:#25262b; --ink:#ececef; --ink-2:#c9c9cf; --muted:#9a9aa3; --line:#33343a;
+    --accent:#8fb8e3; --accent-ink:#10161d; --accent-soft:#1f2d3b;
+    --ok:#6fd49c; --ok-bg:#15301f; --ok-line:#2d6a45;
+    --bad:#f4938a; --bad-bg:#3a1c19; --bad-line:#7a3a33;
+    --warn:#e6b35c;
+    --lv-unseen:#3a3b41; --lv-0:#d2685e; --lv-1:#d9a441; --lv-2:#6aa3d6; --lv-ret:#4fb67d;
+    --heavy:#f3b58c; --heavy-bg:#3a2518;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141517; --surface:#1d1e22; --surface-2:#25262b; --ink:#ececef; --ink-2:#c9c9cf; --muted:#9a9aa3; --line:#33343a;
+  --accent:#8fb8e3; --accent-ink:#10161d; --accent-soft:#1f2d3b;
+  --ok:#6fd49c; --ok-bg:#15301f; --ok-line:#2d6a45;
+  --bad:#f4938a; --bad-bg:#3a1c19; --bad-line:#7a3a33;
+  --warn:#e6b35c;
+  --lv-unseen:#3a3b41; --lv-0:#d2685e; --lv-1:#d9a441; --lv-2:#6aa3d6; --lv-ret:#4fb67d;
+  --heavy:#f3b58c; --heavy-bg:#3a2518;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+/* header */
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hrow{display:flex;align-items:center;gap:12px;justify-content:space-between;padding-top:14px}
+.brand h1{font-family:var(--serif);font-weight:600;font-size:1.3rem;margin:0;letter-spacing:.005em}
+.brand .meta{font-size:.82rem;color:var(--muted);margin-top:2px}
+.brand .meta b{color:var(--ink-2);font-weight:600}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:.82rem;color:var(--ink-2);white-space:nowrap}
+.iconbtn:hover{background:var(--surface-2)}
+
+/* progress */
+.prog{padding:10px 0 10px}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--lv-unseen)}
+.bar span{display:block;height:100%;transition:width .35s ease}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:.78rem;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.legend .ret{margin-left:auto;color:var(--ink);font-weight:600}
+
+/* tabs */
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:thin;margin:0 -16px;padding:0 16px}
+nav.tabs button{border:0;background:none;padding:10px 12px 11px;font-size:.88rem;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+nav.tabs .sep{width:1px;background:var(--line);margin:10px 6px;flex:0 0 1px}
+
+main.wrap{padding-top:24px;padding-bottom:60px}
+@media (max-width:700px){header.top{position:static}.brand h1{font-size:1.12rem}.hrow{padding-top:10px}}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:3px}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:7px;font-size:.86rem;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ctl{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
+select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;max-width:100%}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:var(--ink-2);cursor:pointer;user-select:none}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+.banner{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--ink);padding:8px 12px;border-radius:10px;margin-bottom:12px;font-size:.88rem}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:24px}
+@media (max-width:560px){.card{padding:18px}}
+.cardhead{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.76rem;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.pill{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;text-transform:none;letter-spacing:0;font-size:.76rem;color:var(--ink-2);background:var(--surface-2)}
+.pill.heavy{background:var(--heavy-bg);color:var(--heavy);border-color:transparent;font-weight:600}
+.pill.rev{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+.dots{display:inline-flex;gap:3px;margin-left:auto}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--lv-unseen)}
+.dots i.on{background:var(--lv-ret)}
+.prompt{font-family:var(--serif);font-size:1.32rem;line-height:1.45;margin:0 0 20px;color:var(--ink)}
+@media (max-width:560px){.prompt{font-size:1.16rem}}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:12px 14px;font-size:1rem;line-height:1.4;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opt .k{flex:0 0 24px;height:24px;border-radius:6px;background:var(--surface-2);color:var(--muted);font-size:.8rem;font-weight:700;display:grid;place-items:center;font-family:var(--mono)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .k{background:var(--ok);color:var(--surface)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .k{background:var(--bad);color:var(--surface)}
+.opt.dim{opacity:.55}
+.fillrow{display:flex;gap:10px}
+.fillrow input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:12px 14px;font-size:1.05rem}
+.fillrow input:focus{border-color:var(--accent);outline:none}
+.fillrow input.right{border-color:var(--ok);background:var(--ok-bg)}
+.fillrow input.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:10px 18px;font-weight:600;font-size:.95rem}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.small{padding:6px 12px;font-size:.84rem}
+.btn.quiet{background:transparent;border-color:var(--line);color:var(--ink-2);font-weight:500}
+.hint{font-size:.8rem;color:var(--muted);margin-top:10px}
+.hint kbd{font-family:var(--mono);font-size:.74rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface-2)}
+
+/* feedback */
+.fb{margin-top:18px;border-radius:12px;padding:16px 18px;border:1.5px solid;animation:pop .22s ease}
+@keyframes pop{from{transform:scale(.985);opacity:0}to{transform:none;opacity:1}}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok-line)}
+.fb.no{background:var(--bad-bg);border-color:var(--bad-line)}
+.fb .verdict{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:700;font-family:var(--serif)}
+.fb.ok .verdict{color:var(--ok)}
+.fb.no .verdict{color:var(--bad)}
+.fb .mark{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--surface);font-size:1.05rem;flex:0 0 32px}
+.fb.ok .mark{background:var(--ok)}
+.fb.no .mark{background:var(--bad)}
+.fb .ans{margin-top:8px;font-size:1rem}
+.fb .ans b{font-weight:700}
+.fb .sub{margin-top:6px;font-size:.86rem;color:var(--ink-2)}
+.fb .why{margin-top:10px;font-size:.92rem;color:var(--ink-2);line-height:1.55}
+.fb .src{margin-top:8px;font-size:.76rem;color:var(--muted)}
+.nextrow{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:14px}
+
+/* matching */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+@media (max-width:640px){.mgrid{gap:8px}}
+.mcol{display:grid;gap:8px;align-content:start}
+.mcol h4{margin:0 0 2px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.mi{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;text-align:left;font-size:.9rem;line-height:1.38;min-height:44px;transition:border-color .12s,background .12s}
+.mi:hover:not(:disabled){border-color:var(--accent)}
+.mi.sel{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent-soft)}
+.mi.done{border-color:var(--ok-line);background:var(--ok-bg);color:var(--ink-2);cursor:default}
+.mi.done.missed{border-color:var(--bad-line);background:var(--bad-bg)}
+.mi.shake{animation:shake .32s ease;border-color:var(--bad);background:var(--bad-bg)}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.mi.ans{font-weight:600}
+@media (max-width:640px){.mi{font-size:.84rem;padding:9px 10px}}
+.mfb{margin-top:14px;min-height:0}
+
+/* side */
+aside .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+aside h3,.panel h3{font-family:var(--serif);font-size:1.08rem;margin:0 0 4px}
+.panel .sub{font-size:.8rem;color:var(--muted);margin-bottom:12px}
+.weak{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;max-height:380px;overflow:auto}
+.weak li{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:.82rem;line-height:1.4}
+.weak .wq{color:var(--ink-2)}
+.weak .wa{font-weight:600;margin-top:3px}
+.weak .wn{float:right;color:var(--bad);font-weight:700;font-size:.78rem;margin-left:8px}
+.empty{font-size:.85rem;color:var(--muted);padding:6px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.tbl td{padding:6px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl td:last-child{text-align:right;color:var(--muted);white-space:nowrap;padding-left:8px}
+.mini{height:6px;border-radius:3px;background:var(--lv-unseen);overflow:hidden;display:flex;margin-top:4px}
+.mini span{height:100%}
+.hv{font-size:.66rem;font-weight:700;color:var(--heavy);background:var(--heavy-bg);border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+
+/* activities */
+.acthead h2,.notes h2{font-family:var(--serif);font-size:1.5rem;margin:0}
+.acthead .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+.acthead .note{margin:14px 0 18px;font-size:.9rem;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:10px 14px;border-left:3px solid var(--accent)}
+.qcount{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:10px}
+.qbar{height:4px;background:var(--surface-2);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.qbar span{display:block;height:100%;background:var(--accent)}
+.score{font-family:var(--serif);font-size:2.4rem;font-weight:600;margin:0}
+.review{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:10px}
+.review li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.review li.miss{border-color:var(--bad-line);background:var(--bad-bg)}
+.review .rq{color:var(--ink-2)}
+.review .ra{font-weight:600;margin-top:4px}
+.review .rw{color:var(--muted);font-size:.82rem;margin-top:4px}
+.best{font-size:.8rem;color:var(--muted)}
+
+/* notes */
+.notes section{margin-top:22px}
+.notes h3{font-family:var(--serif);font-size:1.12rem;margin:0 0 8px}
+.notes ul{margin:0;padding-left:20px}
+.notes li{margin:6px 0;font-size:.93rem;color:var(--ink-2)}
+.srcs{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:6px}
+.srcs th,.srcs td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+.srcs th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.srcs td:last-child,.srcs th:last-child{text-align:right}
+.danger{color:var(--bad);border-color:var(--bad-line)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="hrow">
+      <div class="brand">
+        <h1>ITSS 4351 · Midterm Study</h1>
+        <div class="meta" id="examMeta"></div>
+      </div>
+      <button class="iconbtn" id="themeBtn" type="button" title="Switch light / dark">Theme: Auto</button>
+    </div>
+    <div class="prog" aria-label="Mastery progress">
+      <div class="bar" id="bar"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </div>
+</header>
+<main class="wrap" id="main"></main>
+<script>
+/* ===== SOURCES ===== */
+const SOURCES = {
+  REV:  "Midterm Exam Review (F26)",
+  CH1:  "WK1 Reading: BI Chapter 1 (Sharda)",
+  WK1:  "WK1 Intro to BI slides",
+  WK2:  "WK2 From Data to Decisions slides",
+  "7W": "WK2 7Ws / BI Communication slides",
+  DWF:  "Data Warehouse Fundamentals slides (F25)",
+  DW26: "Data Warehousing slides (F26)",
+  DWM:  "Data Warehouse Modeling slides",
+  DM:   "Data Mart slides",
+  PON:  "Ponniah, DW Fundamentals Ch. 2",
+  OLS:  "OLAP / Cube slides",
+  CD:   "Chaudhuri & Dayal OLAP paper",
+  DI:   "Data Integration, Alteryx & SSIS slides",
+  IM3:  "Ch. 3 Instructor Manual (Sharda)",
+  DISC: "Your BI Concepts discussion"
+};
+
+/* ===== TOPICS (from the Midterm Review, section 2) ===== */
+const TOPICS = [
+  { k: "bi",   name: "Intro to Business Intelligence", wk: "Weeks 1–2", w: "Medium" },
+  { k: "dw",   name: "Data Warehouse",                 wk: "Week 3",    w: "HEAVY" },
+  { k: "dm",   name: "Data Mart",                      wk: "Week 4",    w: "HEAVY" },
+  { k: "olap", name: "OLAP and the Cube",              wk: "Weeks 1, 3", w: "Medium" },
+  { k: "etl",  name: "Data Integration and ETL",       wk: "Weeks 5–6", w: "HEAVY" },
+  { k: "alx",  name: "Alteryx",                        wk: "Weeks 5–6", w: "Medium" }
+];
+
+/* Extra plausible distractors per group — every string here appears in your documents. */
+const EXTRAS = {
+  "bi-tools":  ["Tableau", "MicroStrategy"],
+  "bi-mine":   ["Outlier detection", "Tracking patterns"],
+  "bi-style":  ["Report delivery and alerting", "Statistics and data mining"],
+  "bi-vendor": ["Teradata", "Tableau"],
+  "bi-chain":  ["Knowledge", "Wisdom", "Insights"],
+  "bi-orient": ["Operational", "Tactical"],
+  "bi-gsmdim": ["Time horizons", "Levels of analytics"],
+  "bi-who":    ["Middle management"],
+  "bi-num":    ["7", "12", "4"],
+  "bi-steps":  ["Identify possible solutions and evaluate them"],
+  "bi-model":  ["Environmental factors", "Business intelligence"],
+  "bi-env":    ["Globalization", "Competition", "Government regulations"],
+  "bi-inf":    ["Data mining", "Visualization"],
+  "bi-anname": ["Diagnostic", "Predictive"],
+  "bi-store":  ["Relational databases (RDBMS)", "Content management systems"],
+  "bi-qual":   ["Data richness", "Data granularity"],
+  "bi-pct":    ["12%"],
+  "bi-viz":    ["Structured"],
+  "dw-people": ["Ralph Kimball", "E. F. Codd"],
+  "dw-acr":    [],
+  "dw-num":    ["12", "5"],
+  "dw-kind":   ["Data lake", "Virtual data warehouse", "Data warehouse appliance"],
+  "dw-orient": ["Application", "Technology"],
+  "dw-card":   ["One-to-one (1:1)"],
+  "dw-enrol":  ["Term", "Grade", "Course"],
+  "dw-im":     ["ETL tools", "Metadata", "OLAP servers"],
+  "dw-im2":    ["Nonvolatility", "Granularity", "Agility"],
+  "dw-mach":   ["Separate machines"],
+  "dm-def":    ["Data warehouse", "ODS", "Data lake"],
+  "dm-num":    ["4", "5"],
+  "dm-dis":    ["High maintenance", "Too many data marts become challenging to manage"],
+  "dm-td":     ["Practical (supermart) approach"],
+  "dm-super":  ["Dependent data marts", "Virtual data marts", "Oper marts"],
+  "dm-view":   ["Fact table", "Star schema", "Cube"],
+  "dm-comp":   ["Replaces"],
+  "dm-vs":     ["ODS", "Data lake"],
+  "olap-key":  ["Surrogate"],
+  "etl-map":   ["Reconciliation", "Data staging", "Scrubbing"],
+  "etl-rej":   ["Archived", "Purged", "Staged"],
+  "etl-back":  ["Data scrubbing", "Reconciliation", "Refresh mode"],
+  "etl-di":    ["ETL", "Data federation", "Data propagation"],
+  "etl-tools": ["Informatica PowerCenter", "Talend Open Studio", "IBM DataStage", "Oracle Data Integrator"],
+  "etl-ssbi":  ["Integration Services"],
+  "etl-agent": ["SQL Server Data Tools", "SQL Server Management Studio", "Visual Studio"],
+  "alx-sort":  ["Descending"]
+};
+
+/* ===== DRILL ITEMS =====
+   Row: [question, answer, {alt, kw, x}]   r = 1 means the fact is on the Midterm Review sheet. */
+const BLOCKS = [
+/* ---------------- INTRO TO BI ---------------- */
+["bi","bi-process","REV",1,[
+ ["BI process, step 1: pull data out of the operational systems that record the business (sales, HR, finance, web).","Collect"],
+ ["BI process step: combine the sources into one consistent set. The review calls this the ETL step.","Integrate",{alt:["integration"]}],
+ ["BI process step: hold the data in a data warehouse, organised for analysis rather than for recording transactions.","Store",{alt:["storage"]}],
+ ["BI process step: query, aggregate and mine the data (OLAP, reporting, data mining).","Analyse",{alt:["analyze","analysis"]}],
+ ["BI process, last step: dashboards, scorecards and reports that a decision maker actually reads.","Present",{alt:["presentation"]}]
+]],
+["bi","bi-arch","REV",1,[
+ ["BI architecture component: the operational systems. Also called source or operational systems.","Data sources",{alt:["source systems","operational systems"]}],
+ ["BI architecture component: ETL tools that extract, clean, transform and load.","Integration layer",{alt:["integration"]}],
+ ["BI architecture component: OLAP servers, reporting tools, data mining.","Analysis layer",{alt:["analysis"]}],
+ ["BI architecture component: dashboards, scorecards, ad-hoc reports.","Presentation",{alt:["presentation layer"]}],
+ ["BI architecture component: data about the data. Where it came from, what it means, how it was transformed.","Metadata"]
+]],
+["bi","bi-grew","REV",1,[
+ ["Why BI grew: this rose faster than anyone could handle by hand.","Data volume and variety",{kw:[["volume","variety"]]}],
+ ["Why BI grew: this got cheap enough to keep history rather than discard it.","Storage and compute",{kw:[["storage","compute"]]}],
+ ["Why BI grew: decisions had to be made faster and with evidence.","Competitive pressure",{kw:[["competit"]]}],
+ ["Why BI grew: these matured, so analysts stopped needing a developer for every question.","Tools",{alt:["tools matured","bi tools"]}]
+]],
+["bi","bi-tools","REV",1,[
+ ["Microsoft's BI tool on the review's 'tools you should be able to name' list.","Power BI",{alt:["microsoft power bi","powerbi"]}],
+ ["IBM's BI tool on the review's list.","Cognos",{alt:["ibm cognos"]}],
+ ["SAP's BI tool on the review's list.","BusinessObjects",{alt:["sap businessobjects","business objects"]}],
+ ["Qlik's BI products on the review's list.","Qlik Sense / QlikView",{alt:["qlik sense","qlikview","qlik"]}]
+]],
+["bi","bi-mine","REV",1,[
+ ["Data mining family: put each row into one of a set of known categories. 'Will this customer churn, yes or no?'","Classification"],
+ ["Data mining family: find natural groupings when you do NOT know the categories in advance.","Clustering"],
+ ["Data mining family: predict a continuous number. 'What will revenue be next quarter?'","Regression"],
+ ["Data mining family: find things that occur together. Market basket analysis (bread and butter).","Association"]
+]],
+["bi","bi-comp4","CH1",0,[
+ ["Ch. 1 BI component: 'a collection of tools for manipulating, mining, and analyzing the data in the data warehouse.'","Business analytics"],
+ ["Ch. 1 BI component for monitoring and analyzing performance.","Business performance management (BPM)",{alt:["bpm","business performance management"]}],
+ ["Ch. 1 BI component such as a dashboard (the figure also shows a browser and a portal).","User interface"],
+ ["BI implies the use of a ___, whereas DSS may or may not have such a feature.","Data warehouse"]
+]],
+["bi","bi-style","CH1",0,[
+ ["One of the five BI styles. Also known as slice-and-dice analysis.","Cube analysis"],
+ ["One of the five BI styles. Uses dashboards and scorecards.","Enterprise reporting"],
+ ["Five BI styles: report delivery and alerting, enterprise reporting, cube analysis, statistics and data mining, and ___.","Ad hoc queries",{alt:["ad hoc query","adhoc queries","ad-hoc queries"]}]
+]],
+["bi","bi-vendor","CH1",0,[
+ ["This company distinguishes five styles of BI and offers special tools for each.","MicroStrategy"],
+ ["Coined the term BI in the mid-1990s.","Gartner Group",{alt:["gartner"]}]
+]],
+["bi","bi-year","CH1",0,[
+ ["BI's roots: the MIS reporting systems of this decade. Static, two-dimensional, no analytical capabilities.","1970s",{alt:["the 1970s","70s"]}],
+ ["Executive information systems (EIS) emerged in this period.","Early 1980s",{alt:["1980s","early 80s"]}],
+ ["DSS tools started to appear under the names BI and business analytics in this period.","Mid-1990s",{alt:["mid 1990s","1990s"]}],
+ ["By this year, BI systems started to include artificial intelligence capabilities.","2005"],
+ ["By this year, the major commercial products and services appeared under the umbrella term BI.","2006"]
+]],
+["bi","bi-acr","CH1",0,[
+ ["EIS stands for ___.","Executive information systems",{alt:["executive information system"]}]
+]],
+["bi","bi-chain","CH1",0,[
+ ["Ch. 1: the process of BI is based on the transformation of data to information, then to decisions, and finally to ___.","Actions"]
+]],
+["bi","bi-struct","CH1",0,[
+ ["Scott-Morton's DSS definition: 'interactive computer-based systems, which help decision makers utilize data and models to solve ___ problems.'","Unstructured"],
+ ["Keen and Scott-Morton: DSS is a support system for management decision makers who deal with ___ problems.","Semistructured",{alt:["semi-structured"]}],
+ ["Simon's continuum: routine, typically repetitive problems for which standard solution methods exist (also called programmed).","Structured"],
+ ["Keen and Scott-Morton's examples: trading bonds, setting marketing budgets for consumer products, capital acquisition analysis.","Semistructured",{alt:["semi-structured"]}]
+]],
+["bi","bi-orient","CH1",0,[
+ ["DSS is oriented toward analysts. BI has an executive and ___ orientation, especially in its BPM and dashboard components.","Strategy",{alt:["strategic"]}]
+]],
+["bi","bi-gsmdim","CH1",0,[
+ ["Gorry and Scott-Morton's framework is a 3-by-3 matrix. Its two dimensions are the degree of structuredness and ___.","Types of control",{alt:["type of control"]}]
+]],
+["bi","bi-anth","CH1",0,[
+ ["Anthony's category: defining long-range goals and policies for resource allocation.","Strategic planning"],
+ ["Anthony's category: the acquisition and efficient use of resources in the accomplishment of organizational goals.","Management control",{alt:["managerial control"]}],
+ ["Anthony's category: the efficient and effective execution of specific tasks.","Operational control"]
+]],
+["bi","bi-who","CH1",0,[
+ ["Decision support matrix: tasks in cells 1, 2 and 4 are usually performed by ___.","Lower-level managers",{alt:["lower level managers"],kw:[["lower"]]}],
+ ["Decision support matrix: tasks in cells 6, 8 and 9 are the responsibility of ___.","Top executives or highly trained specialists",{kw:[["executive","specialist"]]}]
+]],
+["bi","bi-num","CH1",0,[
+ ["Mintzberg: managers perform this many major roles.","10",{alt:["ten"]}],
+ ["SAS proposed this many levels of analytics, beginning with standardized reports.","8",{alt:["eight"]}]
+]],
+["bi","bi-mintz","CH1",0,[
+ ["Mintzberg category containing Figurehead, Leader and Liaison.","Interpersonal"],
+ ["Mintzberg category containing Monitor, Disseminator and Spokesperson.","Informational"],
+ ["Mintzberg category containing Entrepreneur, Disturbance handler, Resource allocator and Negotiator.","Decisional"]
+]],
+["bi","bi-roles","CH1",0,[
+ ["Mintzberg role: responsible for corrective action when the organization faces important, unexpected disturbances.","Disturbance handler"],
+ ["Mintzberg role: transmits information to outsiders about the organization's plans, policies, actions, results.","Spokesperson"],
+ ["Mintzberg role: responsible for the allocation of organizational resources of all kinds.","Resource allocator"],
+ ["Mintzberg role: symbolic head; performs routine duties of a legal or social nature.","Figurehead"],
+ ["Mintzberg role: represents the organization at major negotiations.","Negotiator"],
+ ["Mintzberg role: maintains a self-developed network of outside contacts and informers.","Liaison"]
+]],
+["bi","bi-steps","CH1",0,[
+ ["Managers' four-step decision process, step 1.","Define the problem",{kw:[["define"],["problem"]]}],
+ ["Managers' four-step decision process, step 2.","Construct a model",{kw:[["model"]]}],
+ ["Managers' four-step decision process, step 4.","Compare, choose, and recommend a solution",{kw:[["choose","compare","recommend"]]}]
+]],
+["bi","bi-model","CH1",0,[
+ ["Business Pressures-Responses-Support Model: business pressures, organizational responses, and ___.","Computerized support",{alt:["computerized decision support"],kw:[["computer"]]}]
+]],
+["bi","bi-env","CH1",0,[
+ ["Table 1.1 business environment factor categories: markets, consumer demands, technology, and ___.","Societal",{alt:["society"]}]
+]],
+["bi","bi-an","WK2",0,[
+ ["Analytics type that asks 'What happened?'","Descriptive"],
+ ["Analytics type that asks 'Why did it happen?'","Diagnostic"],
+ ["Analytics type that asks 'What will happen?'","Predictive"],
+ ["Analytics type that asks 'What should we do?'","Prescriptive"],
+ ["A bank produces a monthly report of new accounts opened and closed.","Descriptive"],
+ ["A telecom sees a churn spike and links it to frequent network outages in specific regions.","Diagnostic"],
+ ["An insurer predicts which policyholders are most likely to file claims next year.","Predictive"],
+ ["A logistics company optimizes delivery routes to cut fuel cost and delivery time.","Prescriptive"],
+ ["An e-commerce firm sets dynamic pricing to maximize Black Friday sales.","Prescriptive"],
+ ["An airline forecasts holiday ticket demand from historical booking data.","Predictive"]
+]],
+["bi","bi-inf","CH1",0,[
+ ["INFORMS: analytics is the combination of computer technology, management science techniques, and ___.","Statistics"]
+]],
+["bi","bi-anname","CH1",0,[
+ ["Ch. 1: descriptive analytics is also called ___ analytics.","Reporting"]
+]],
+["bi","bi-anname","WK1",0,[
+ ["WK1 slides: analytics that focuses on discovering and explaining data characteristics and relationships based on existing data.","Explanatory analytics",{alt:["explanatory"]}]
+]],
+["bi","bi-dikw","WK2",0,[
+ ["DIKW: raw facts without context (numbers, symbols).","Data"],
+ ["DIKW: data organized with meaning and context.","Information"],
+ ["DIKW: insights derived from analyzed information.","Knowledge"],
+ ["DIKW: decisions and actions based on knowledge.","Wisdom"],
+ ["Data + Context + Purpose = ___","Information"],
+ ["Region A example: 'Sales declined 12% in Region A last quarter' is this DIKW level.","Information"],
+ ["Region A example: 'Decline caused by inventory stock-outs' is this DIKW level.","Knowledge"],
+ ["Region A example: 'Daily sales numbers, inventory counts' is this DIKW level.","Data"]
+]],
+["bi","bi-shape","WK2",0,[
+ ["Data shape that includes XML, HTML, JSON and log files.","Semi-structured",{alt:["semistructured"]}],
+ ["Data shape targeted for humans to process: reports, emails, social posts, images, audio.","Unstructured"],
+ ["Data shape organized into a predefined format, usually tables of rows and columns.","Structured"]
+]],
+["bi","bi-store","WK2",0,[
+ ["Semi-structured data is often stored in these databases, such as MongoDB, CouchDB and Cassandra.","NoSQL",{alt:["nosql databases"]}],
+ ["Unstructured data storage that holds vast volumes of raw data (HDFS, Amazon S3).","Data lakes",{alt:["data lake"]}]
+]],
+["bi","bi-prep","WK2",0,[
+ ["Preprocessing task: handle missing values, identify and reduce noise, find and eliminate erroneous data.","Data cleaning",{alt:["cleaning"]}],
+ ["Preprocessing task: normalize to a standard range (e.g., 0 to 1), discretize, construct new attributes.","Data transformation",{alt:["transformation"]}],
+ ["Preprocessing task: access and collect, select and filter, integrate and unify the data.","Data consolidation",{alt:["consolidation"]}],
+ ["Preprocessing task: reduce the number of attributes or records; balance skewed data.","Data reduction",{alt:["reduction"]}]
+]],
+["bi","bi-qual","WK2",0,[
+ ["Accuracy, completeness, consistency, validity.","Data quality"],
+ ["Relevance, timeliness, usefulness to a decision.","Information quality"]
+]],
+["bi","bi-lvl","7W",0,[
+ ["Decision level: short-term, structured. BI role: daily monitoring (fraud alerts, stock).","Operational"],
+ ["Decision level: medium-term, semi-structured. Campaign adjustments, quarterly planning.","Tactical"],
+ ["Decision level: long-term, unstructured. Market expansion, mergers, digital transformation.","Strategic"]
+]],
+["bi","bi-7w","7W",0,[
+ ["7Ws: reporting frequency, deadlines.","When"],
+ ["7Ws: data sources, systems, platforms.","Where"],
+ ["7Ws: business purpose (cost, growth, compliance).","Why"],
+ ["7Ws: tools/methods (dashboards, reports).","Which"],
+ ["7Ws: process: Collect → Analyze → Communicate.","How"],
+ ["7Ws: decision makers, managers, analysts.","Who"],
+ ["7Ws: problem to solve, insight to deliver.","What"]
+]],
+["bi","bi-aud","7W",0,[
+ ["Audience that should get concise dashboards (KPIs, visuals).","Executives"],
+ ["Audience that should get tactical reports with drill-downs.","Managers"],
+ ["Audience that should get granular data and statistical models.","Analysts"]
+]],
+["bi","bi-fix","WK2",0,[
+ ["Fix for data silos across departments.","Implement strong data governance policies",{kw:[["governance"]]}],
+ ["Fix for information overload (too many metrics).","Prioritize metrics tied to business goals",{kw:[["priorit"],["metric","goal"]]}],
+ ["Fix for poor visualization causing misinterpretation.","Adopt visualization best practices",{kw:[["best practice"]]}],
+ ["Fix for IT and business being out of alignment.","Train users on BI literacy and interpretation",{kw:[["train","literacy"]]}]
+]],
+["bi","bi-pct","7W",0,[
+ ["Retail case: predictive analytics improved supply chain efficiency by ___.","20%",{alt:["20 percent","twenty percent","20"]}]
+]],
+["bi","bi-wk1arch","WK1",0,[
+ ["WK1 architecture: real-time monitoring of business activities; alerts fire when a metric goes above or below a baseline.","Data monitoring and alerting",{kw:[["monitor","alert"]]}],
+ ["WK1 architecture: optimized for decision support; generally a data warehouse or data mart.","Data store"],
+ ["WK1 architecture: data selection and retrieval; analysts create queries and reports.","Query and reporting"],
+ ["WK1 architecture: presents data as summary reports, maps, pie or bar graphs, dashboards.","Data visualization"],
+ ["WK1 architecture: collect, filter, integrate and aggregate internal and external data into a data store.","ETL tools",{alt:["etl"]}],
+ ["WK1 architecture: data analysis and data-mining tasks; advises which analysis tool to select.","Data analytics"]
+]],
+["bi","bi-app","CH1",0,[
+ ["Table 1.3: 'Which customers are most likely to respond to my promotion?'","Propensity to buy"],
+ ["Table 1.3: 'Which customer is at risk of leaving?'","Customer attrition"],
+ ["Table 1.3: 'What is the lifetime profitability of my customer?'","Customer profitability"],
+ ["Table 1.3: 'What is the best channel to reach my customer in each segment?'","Channel optimization"],
+ ["Table 1.3: 'What market segments do my customers fall into, and what are their characteristics?'","Customer segmentation"],
+ ["Table 1.3: 'How can I tell which transactions are likely to be fraudulent?'","Fraud detection"]
+]],
+["bi","bi-viz","WK1",0,[
+ ["Data visualization: data that describes qualities of the data (nominal or ordinal).","Qualitative"],
+ ["Data visualization: data that describes numeric facts or measures.","Quantitative"]
+]],
+
+/* ---------------- DATA WAREHOUSE ---------------- */
+["dw","dw-comp","REV",1,[
+ ["A central repository of integrated, historical data from many sources, structured for analysis.","Data warehouse",{alt:["dw"]}],
+ ["Staging for recent operational data on its way in. Current, not historical.","ODS",{alt:["operational data store"]}],
+ ["The central integrated store serving the whole organisation.","EDW",{alt:["enterprise data warehouse"]}],
+ ["A subset aimed at one department or subject area.","Data mart"],
+ ["The description of structure, meaning, lineage and transformation rules.","Metadata"]
+]],
+["dw","dw-comp","DW26",0,[
+ ["DW26: 'a staging area that also allows queries, for analysis that needs near-real-time data.'","ODS",{alt:["operational data store"]}]
+]],
+["dw","dw-comp","IM3",0,[
+ ["Instructor manual: 'a pool of data produced to support decision making.'","Data warehouse"]
+]],
+["dw","dw-char","REV",1,[
+ ["Organised around business subjects (customer, product, sales), not around the processes that captured the data.","Subject-oriented",{alt:["subject oriented"]}],
+ ["One standard for names, codes, units and formats, no matter which source a row came from.","Integrated"],
+ ["Every row is tied to a point in time, so the warehouse holds a HISTORY rather than only today's values.","Time-variant",{alt:["time variant"]}],
+ ["Data is loaded and then read. It is not updated or deleted the way an operational row is.","Nonvolatile",{alt:["non-volatile"]}],
+ ["The defining characteristic the review calls 'the one most often forgotten.'","Time-variant",{alt:["time variant"]}],
+ ["Follows from the four: data is also held pre-aggregated so analytical queries do not have to scan the detail every time.","Summarized",{alt:["summarised"]}],
+ ["Follows from the four: deliberately denormalized into star or snowflake schemas, because query speed matters more than avoiding redundancy.","Not normalized",{alt:["denormalized","denormalised","not normalised"]}]
+]],
+["dw","dw-char","DW26",0,[
+ ["Example: 'CA', 'Cali' and 'California' all become one agreed value.","Integrated"],
+ ["Example: five years of coat sales kept to forecast this winter.","Time-variant",{alt:["time variant"]}],
+ ["Example: a 2021 report still shows the customer's 2021 address.","Nonvolatile",{alt:["non-volatile"]}],
+ ["Example: one Customer subject area, not CRM + billing + web tables.","Subject-oriented",{alt:["subject oriented"]}]
+]],
+["dw","dw-people","PON",0,[
+ ["Considered the father of data warehousing; defined it as 'subject oriented, integrated, nonvolatile, and time variant.'","Bill Inmon",{alt:["inmon","w h inmon","william inmon"]}],
+ ["Practitioner whose definition lists: separate, available, integrated, time stamped, subject oriented, nonvolatile, accessible.","Sean Kelly",{alt:["kelly"]}]
+]],
+["dw","dw-people","REV",1,[
+ ["Whose twelve rules define what makes a data warehouse (per the review)?","Bill Inmon",{alt:["inmon"]}]
+]],
+["dw","dw-acr","REV",1,[
+ ["ODS stands for ___.","Operational Data Store"],
+ ["EDW stands for ___.","Enterprise Data Warehouse"]
+]],
+["dw","dw-acr","DWF",0,[
+ ["The slides define an 'oper mart' as ___.","An operational data mart",{alt:["operational data mart"]}],
+ ["DWA stands for ___.","Data warehouse administrator"],
+ ["SCD stands for ___.","Slowly Changing Dimension",{alt:["slowly changing dimensions"]}]
+]],
+["dw","dw-arch","REV",1,[
+ ["Architecture: client → database. Simple, can be faster; poor scalability, logic lives in the client.","Two-tier",{alt:["2-tier","two tier"]}],
+ ["Architecture: client → business logic → database. Scalable, separates concerns; more complex and costly.","Three-tier",{alt:["3-tier","three tier"]}],
+ ["Architecture: browser → web/app server → database. Reachable anywhere, nothing to install; depends on the network, security surface.","Web-based",{alt:["web based","web"]}]
+]],
+["dw","dw-arch","DW26",0,[
+ ["DW26: the first two tiers run on the same machine. Cheaper, but they compete for resources.","Two-tier",{alt:["2-tier","two tier"]}]
+]],
+["dw","dw-tier","DW26",0,[
+ ["Three-tier architecture, Tier 1 (the ETL layer).","Data acquisition software (back end)",{kw:[["acquisition"]]}],
+ ["Three-tier architecture, Tier 2.","The data warehouse itself (data + database software)",{kw:[["warehouse"]]}],
+ ["Three-tier architecture, Tier 3: how users access and analyze.","Client software (front end)",{kw:[["client","front"]]}]
+]],
+["dw","dw-mach","IM3",0,[
+ ["Instructor manual: in a two-tier architecture, the application and the data warehouse reside on ___.","The same machine",{kw:[["same"]]}]
+]],
+["dw","dw-alt","DW26",0,[
+ ["Separate marts, no enterprise integration. Fast to stand up; no single version of the truth.","Independent data marts",{alt:["independent data mart","independent"]}],
+ ["Linked dimensional marts sharing conformed dimensions (Kimball). Incremental delivery; needs discipline on conformed dimensions.","Data mart bus",{alt:["bus","bus architecture","data mart bus architecture"]}],
+ ["Central EDW feeding dependent marts (Inmon). Strong integration; slower and costlier to start.","Hub-and-spoke",{alt:["hub and spoke"]}],
+ ["One EDW, no dependent marts. Simplest governance; every department queries the same store.","Centralized data warehouse",{alt:["centralized","centralised"]}],
+ ["Logical integration of existing systems. No new physical store; query performance and consistency suffer.","Federated",{alt:["federated architecture"]}]
+]],
+["dw","dw-alt","DWF",0,[
+ ["The hub-and-spoke architecture is also called the ___.","Corporate information factory"]
+]],
+["dw","dw-num","DW26",0,[
+ ["How many organizational factors affect DW architecture selection (Sharda §3.4)?","10",{alt:["ten"]}],
+ ["Of those factors, how many does the F26 slide say are about people, not technology?","6",{alt:["six"]}],
+ ["How many technical questions does the slide add (which DBMS, parallel processing, migration tools, retrieval tools)?","4",{alt:["four"]}]
+]],
+["dw","dw-ik","REV",1,[
+ ["Top-down direction.","Inmon",{alt:["bill inmon"]}],
+ ["Bottom-up direction.","Kimball",{alt:["ralph kimball"]}],
+ ["Builds the enterprise data warehouse first.","Inmon",{alt:["bill inmon"]}],
+ ["Builds data marts first.","Kimball",{alt:["ralph kimball"]}],
+ ["Modelling: normalized (3NF) at the warehouse.","Inmon",{alt:["bill inmon"]}],
+ ["Modelling: dimensional star schemas.","Kimball",{alt:["ralph kimball"]}],
+ ["Marts are dependent, derived from the EDW.","Inmon",{alt:["bill inmon"]}],
+ ["The warehouse is the marts themselves, joined by conformed dimensions.","Kimball",{alt:["ralph kimball"]}],
+ ["Strength: one consistent enterprise view.","Inmon",{alt:["bill inmon"]}],
+ ["Strength: delivers business value quickly.","Kimball",{alt:["ralph kimball"]}],
+ ["Cost: slow and expensive to start.","Inmon",{alt:["bill inmon"]}],
+ ["Risk: inconsistency without conformed dimensions.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dw","dw-ik","IM3",0,[
+ ["Most effective with a recognized need for an EDW, an executive 'champion', and willingness to invest before results show.","Inmon",{alt:["bill inmon"]}],
+ ["Most effective for a 'proof of concept' before a full-scale EDW, or when a well-defined high-benefit area can be identified.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dw","dw-ik","PON",0,[
+ ["Chief proponent of the practical approach: plan at the enterprise level, then build conformed 'supermarts' one at a time.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dw","dw-platform","REV",1,[
+ ["Amazon's cloud warehouse on the review list.","Redshift",{alt:["amazon redshift"]}],
+ ["Google's cloud warehouse on the review list.","BigQuery",{alt:["google bigquery","big query"]}],
+ ["IBM's warehouse on the review list.","Netezza",{alt:["ibm netezza"]}],
+ ["Oracle's warehouse on the review list.","Exadata",{alt:["oracle exadata"]}],
+ ["Cloud warehouse on the review list that shares its name with a schema type.","Snowflake"]
+]],
+["dw","dw-kind","REV",1,[
+ ["A warehouse that is run and scaled by a third party, so you pay for use instead of buying hardware.","Hosted or cloud warehouse",{alt:["hosted","cloud","cloud warehouse","hosted warehouse","hosted data warehouse"],kw:[["hosted","cloud"]]}]
+]],
+["dw","dw-orient","REV",1,[
+ ["Twelve-rule themes to know: data integration, nonvolatility, consistency, time-variance, and a ___ rather than process orientation.","Business"]
+]],
+["dw","dw-rule","DWF",0,[
+ ["Twelve rules, Rule 7: data warehouse development is ___-driven; the classical approach is process-driven.","Data"],
+ ["Twelve rules, Rule 12: the warehouse contains a ___ mechanism for resource usage.","Chargeback",{alt:["charge back"]}],
+ ["Twelve rules, Rule 6: data is mainly read-only with periodic ___ updates from operational data. No online updates.","Batch"],
+ ["Twelve rules, Rule 8: current detail, old detail, lightly summarized, and ___ data.","Highly summarized",{alt:["highly summarised"]}]
+]],
+["dw","dw-manip","DW26",0,[
+ ["DW26 table: data manipulation in a data warehouse.","Insert / Select",{alt:["insert and select","insert select"]}],
+ ["DW26 table: data manipulation in a transactional (OLTP) system.","Insert / Update / Delete / Select",{alt:["insert update delete select"]}]
+]],
+["dw","dw-q","DW26",0,[
+ ["DW26 table: type of queries in a data warehouse.","Fewer, complex, ad hoc",{kw:[["complex"],["ad hoc","adhoc","fewer"]]}],
+ ["DW26 table: type of queries in a transactional system.","Many, simple, repetitive",{kw:[["simple","repetitive"]]}]
+]],
+["dw","dw-5prob","DW26",0,[
+ ["Five problems: sales, marketing and finance use different words for the same customer.","Silos",{alt:["data silos"]}],
+ ["Five problems: OLTP overwrites; last quarter's inventory position is simply gone.","Volatility"],
+ ["Five problems: a heavy analytical query competes with live transactions.","Performance"],
+ ["Five problems: normalized tables are built for writing one row, not scanning millions.","Structure"],
+ ["Five problems: no consistent way to compare this year against three years ago.","No history"]
+]],
+["dw","dw-5prob","DWF",0,[
+ ["Analogy: 'asking a busy cashier to perform complex math while customers wait.'","Performance"],
+ ["Analogy: a 'corporate Tower of Babel' of inconsistent definitions and formats.","Silos",{alt:["data silos"]}]
+]],
+["dw","dw-level","DW26",0,[
+ ["Decision level: front line, now/today. Supported by OLTP transaction systems.","Operational"],
+ ["Decision level: middle management, weeks to months. Supported by the DW / data marts.","Tactical"],
+ ["Decision level: senior management, quarters to years. Supported by the DW / enterprise BI.","Strategic"]
+]],
+["dw","dw-layer","DW26",0,[
+ ["Temporary landing zone: clean, de-duplicate, standardize. Users do not query here.","Staging area",{alt:["staging"]}],
+ ["Layer holding facts and dimensions, with history kept.","Warehouse core",{alt:["data warehouse core"]}],
+ ["Layer: CRM, ERP, e-commerce, flat files, external feeds.","Source systems"],
+ ["Layer: departmental subsets; reports, dashboards, OLAP.","Data marts & BI",{alt:["data marts","data marts and bi"]}],
+ ["It 'describes every arrow in this diagram.' Without it nobody can trace where a number came from.","Metadata"]
+]],
+["dw","dw-lake","DW26",0,[
+ ["Schema-on-write.","Data warehouse"],
+ ["Schema-on-read.","Data lake"],
+ ["Any data in raw or native format.","Data lake"],
+ ["Primary users: data scientists.","Data lake"],
+ ["Retrieval speed: very fast.","Data warehouse"],
+ ["Transformation happens before analysis, not before entry.","Data lake"],
+ ["Security: mature, well-established controls.","Data warehouse"]
+]],
+["dw","dw-design","DW26",0,[
+ ["Design level: the subject areas, the entities, and how they relate. No technology.","Conceptual"],
+ ["Design level: facts, dimensions, grain, star or snowflake.","Logical / dimensional",{alt:["logical","dimensional"]}],
+ ["Design level: partitioning, indexing, compression. DDL for a particular DBMS.","Physical"]
+]],
+["dw","dw-er","DW26",0,[
+ ["Conceptual modeling: a thing the business needs to keep information about.","Entity"],
+ ["Conceptual modeling: a fact about an entity (student_id, name, major).","Attribute"],
+ ["Conceptual modeling: how two entities connect, and with what cardinality.","Relationship"]
+]],
+["dw","dw-card","DW26",0,[
+ ["A Student enrolls in many Courses; a Course has many Students. Cardinality?","Many-to-many",{alt:["many to many","m:n","m:m"]}]
+]],
+["dw","dw-enrol","DW26",0,[
+ ["Resolve the Student–Course many-to-many with this entity, which carries term and grade.","Enrollment",{alt:["enrolment"]}]
+]],
+["dw","dw-gran","PON",0,[
+ ["Ponniah: data granularity refers to the ___.","Level of detail",{kw:[["detail"]]}],
+ ["Ponniah: the lower the level of detail, the ___ the data granularity.","Finer"],
+ ["Ponniah: many data warehouses have at least ___ levels of granularity.","Dual",{alt:["two","2"]}]
+]],
+["dw","dw-pcomp","PON",0,[
+ ["Ponniah component: sits on top of all the others and coordinates the services and activities within the warehouse.","Management and control",{alt:["management & control"]}],
+ ["Ponniah component: a workbench to extract, transform and prepare data for loading.","Data staging",{alt:["staging"]}],
+ ["Ponniah component: a separate, 'read-only' repository kept apart from operational storage.","Data storage"],
+ ["Ponniah component: ad hoc reports, complex queries, MD analysis, EIS feed, data mining.","Information delivery"],
+ ["Ponniah component: production, internal, archived and external data.","Source data"]
+]],
+["dw","dw-psrc","PON",0,[
+ ["Source data from the enterprise's operational systems. Its disturbing characteristic is disparity.","Production data"],
+ ["Users' 'private' spreadsheets, documents, customer profiles, departmental databases.","Internal data"],
+ ["Old data periodically moved out of operational systems into separate files; needed for trend analysis.","Archived data"],
+ ["Industry statistics, competitors' market share, standard values of financial indicators.","External data"]
+]],
+["dw","dw-meta","PON",0,[
+ ["Ponniah metadata type: information about the operational data sources, so delivered information can be tied back to them.","Operational metadata"],
+ ["Ponniah metadata type: extraction frequencies, methods, business rules, and all transformations in staging.","Extraction and transformation metadata",{kw:[["extract"],["transform"]]}],
+ ["Ponniah metadata type: the navigational map for end-users, in their own business terminology.","End-user metadata",{alt:["end user metadata"]}],
+ ["Ponniah's analogy for metadata: a directory of the warehouse's contents, like the ___ of your town.","Yellow Pages"]
+]],
+["dw","dw-meta","CD",0,[
+ ["CD paper metadata type: business terms and definitions, ownership of the data, charging policies.","Business metadata"],
+ ["CD paper metadata type: everything needed to set up and use a warehouse (source descriptions, schema, refresh and purging policies, access control).","Administrative metadata"]
+]],
+["dw","dw-im","IM3",0,[
+ ["Instructor manual: tools that enable access from front-end applications, translating between their access requirements and how the warehouse must be accessed.","Middleware tools",{alt:["middleware"]}]
+]],
+["dw","dw-im2","IM3",0,[
+ ["The degree to which a system can adjust to changes in demand without major additional changes or investments.","Scalability"]
+]],
+["dw","dw-scale","DWF",0,[
+ ["Good scalability means queries and other data-access functions grow ___ with the size of the warehouse.","Linearly",{alt:["linear"]}]
+]],
+["dw","dw-future","IM3",0,[
+ ["Future of DW: 'putting the algorithms where the data is.'","In-database processing",{alt:["in database processing","in-database"]}],
+ ["Future of DW: 'moving the data in the memory for faster processing.'","In-memory storage",{alt:["in memory","in-memory","in-memory processing"]}],
+ ["Future of DW: 'all-in-one solutions to DW.'","Data warehouse appliances",{alt:["appliances","dw appliances"]}],
+ ["Future of DW: a new way to store and access data in the database.","Columnar"]
+]],
+["dw","dw-auto","DWF",0,[
+ ["Automotive DW example: infrastructure expenses cut by ___ through data mart consolidation.","2/3",{alt:["two thirds","two-thirds"]}]
+]],
+
+/* ---------------- DATA MART ---------------- */
+["dm","dm-def","REV",1,[
+ ["A subset of warehouse data aimed at one department, subject area or user group.","Data mart"]
+]],
+["dm","dm-why","REV",1,[
+ ["Why marts exist: analysts are not wading through the whole enterprise.","Tailored data set",{kw:[["tailor"]]}],
+ ["Why marts exist: less data, tuned for the queries that group actually runs.","Better performance",{kw:[["perform"]]}],
+ ["Why marts exist: the relevant data is right there, in the shape that department thinks in.","Easier access",{kw:[["access"]]}],
+ ["Why marts exist: you can limit sensitive data to the group entitled to see it.","Security"]
+]],
+["dm","dm-type","REV",1,[
+ ["Drawn from the enterprise data warehouse. Inherits the EDW's model and definitions.","Dependent"],
+ ["Built straight from source systems, without an EDW in between.","Independent"],
+ ["Both: some data from the EDW, some from source systems.","Hybrid"],
+ ["Use case: regional sales reporting built off the central warehouse.","Dependent"],
+ ["Use case: a marketing analytics mart stood up quickly for one campaign.","Independent"],
+ ["Use case: an EDW exists, but the department also needs data it does not yet carry.","Hybrid"]
+]],
+["dm","dm-type","DW26",0,[
+ ["No physical data. Middleware pulls the data at query time.","Virtual"],
+ ["Use it when a merger or new product must be integrated quickly.","Hybrid"],
+ ["Use it when you need one point of access without moving the data.","Virtual"],
+ ["Use it when no EDW exists yet and one department needs answers now.","Independent"],
+ ["Use it when an EDW already exists and you want consistency.","Dependent"]
+]],
+["dm","dm-type","DM",0,[
+ ["DM slides: built on an existing data warehouse; 'a top-down approach.'","Dependent"]
+]],
+["dm","dm-num","REV",1,[
+ ["The midterm review lists this many data mart types.","3",{alt:["three"]}]
+]],
+["dm","dm-ik","REV",1,[
+ ["Build a centralized normalized EDW first. Result: dependent marts, consistent but slower to deliver.","Inmon",{alt:["bill inmon"]}],
+ ["Build dimensional marts first, from source systems. Result: fast delivery, tied together by conformed dimensions.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dm","dm-ik","DM",0,[
+ ["Preferred when a stable business can afford the cost and time, and expects a unified single source of truth.","Inmon",{alt:["bill inmon"]}],
+ ["Preferred for quick execution for an individual business or department, using a star schema.","Kimball",{alt:["ralph kimball"]}],
+ ["Example industries: manufacturing, insurance, banking, retail forecasting.","Inmon",{alt:["bill inmon"]}],
+ ["Example uses: marketing, CRM, banking and retail with limited scope.","Kimball",{alt:["ralph kimball"]}],
+ ["Comparison table: skill requirement is a specialist team.","Inmon",{alt:["bill inmon"]}],
+ ["Comparison table: skill requirement is a generalist team.","Kimball",{alt:["ralph kimball"]}],
+ ["Comparison table: high initial cost; subsequent project development costs are much lower.","Inmon",{alt:["bill inmon"]}],
+ ["Comparison table: low initial cost; each subsequent phase costs almost the same.","Kimball",{alt:["ralph kimball"]}],
+ ["Comparison table: maintenance is easy.","Inmon",{alt:["bill inmon"]}],
+ ["Comparison table: maintenance is difficult, often redundant and subject to revisions.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dm","dm-dis","REV",1,[
+ ["Data mart disadvantage: the same data stored in several places.","Redundant storage",{kw:[["redundan"]]}],
+ ["Data mart disadvantage if the marts are not properly governed.","Inconsistency",{kw:[["inconsisten"]]}],
+ ["Data mart disadvantage if the marts are not integrated.","Siloed data, no enterprise-wide view",{kw:[["silo","enterprise"]]}]
+]],
+["dm","dm-dis","PON",0,[
+ ["Ponniah: the most severe drawback of the bottom-up approach.","Data fragmentation",{kw:[["fragment"]]}]
+]],
+["dm","dm-adv","REV",1,[
+ ["Data mart advantage (review): ___ for a specific group.","Faster queries",{kw:[["fast"]]}]
+]],
+["dm","dm-adv4","DM",0,[
+ ["Mart advantage: different departments can own and control their data.","Data maintenance"],
+ ["Mart advantage: the simple design requires less technical skill.","Simple setup"],
+ ["Mart advantage: key performance indicators (KPIs) can be easily tracked.","Analytics"],
+ ["Mart advantage: building blocks of a future enterprise data warehouse.","Easy entry"]
+]],
+["dm","dm-vs","REV",1,[
+ ["Enterprise-wide, integrated, all subjects, serves the whole organisation.","Data warehouse"],
+ ["One subject area or department, a subset, serves one group.","Data mart"]
+]],
+["dm","dm-vs","PON",0,[
+ ["Ponniah Fig. 2-5: 'union of all data marts'; organized on the E-R model.","Data warehouse"],
+ ["Ponniah Fig. 2-5: a single business process; star-join (facts and dimensions).","Data mart"]
+]],
+["dm","dm-vs","DM",0,[
+ ["DM comparison table: size usually from 100 GB to 1 TB.","Data warehouse"],
+ ["DM comparison table: size usually less than 100 GB.","Data mart"],
+ ["DM comparison table: implementation can take several months to several years.","Data warehouse"],
+ ["DM comparison table: implementation usually takes a few months.","Data mart"]
+]],
+["dm","dm-td","PON",0,[
+ ["Advantage: a truly corporate effort, an enterprise view of data; centralized rules and control.","Top-down",{alt:["top down"]}],
+ ["Advantage: faster and easier implementation of manageable pieces; less risk of failure.","Bottom-up",{alt:["bottom up"]}],
+ ["Disadvantage: high exposure/risk to failure; high outlay without proof of concept.","Top-down",{alt:["top down"]}],
+ ["Disadvantage: permeates redundant data in every data mart; perpetuates inconsistent data.","Bottom-up",{alt:["bottom up"]}]
+]],
+["dm","dm-super","PON",0,[
+ ["Kimball's practical approach implements the warehouse as a series of these carefully architected data marts, one at a time.","Supermarts",{alt:["supermart"]}]
+]],
+["dm","dm-union","PON",0,[
+ ["In the practical approach, a data warehouse is a conformed ___ of all data marts.","Union"]
+]],
+["dm","dm-view","DWM",0,[
+ ["A virtual data mart is usually defined as a single ___.","SQL view",{alt:["view"]}]
+]],
+["dm","dm-hist","DWM",0,[
+ ["Virtual data warehouse/mart disadvantage: it is not possible to keep track of ___.","Historical data",{alt:["history"]}]
+]],
+["dm","dm-comp","IM3",0,[
+ ["Instructor manual: when a mart can handle some, but not all, of the analyses the DW is used for, it ___ the DW.","Complements",{alt:["complement"]}]
+]],
+["dm","dm-choose","DM",0,[
+ ["Which approach to choose depends on the organization's objective, application nature, cost, timeline and ___.","Dependencies"]
+]],
+["dm","olap-schema","DM",0,[
+ ["DM slides: data marts often use a dimensional model and a ___ schema.","Star",{alt:["star schema"]}]
+]],
+
+/* ---------------- OLAP ---------------- */
+["olap","olap-fd","REV",1,[
+ ["The numbers you want to analyse: sales revenue, quantity sold, profit margin.","Fact / measure",{alt:["fact","measure","facts","measures"]}],
+ ["The descriptive attributes you slice them by: time, geography, product.","Dimension",{alt:["dimensions"]}],
+ ["Central table holding the measures plus foreign keys to each dimension.","Fact table"],
+ ["Surrounding table holding the descriptive attributes.","Dimension table"]
+]],
+["olap","olap-fd","OLS",0,[
+ ["Top-down organization within a dimension, used for aggregation and drill-down/roll-up (store → city → state → region).","Attribute hierarchy",{alt:["attribute hierarchies","hierarchy"]}]
+]],
+["olap","olap-fd","IM3",0,[
+ ["The main operational structure in OLAP: a multidimensional data structure (actual or virtual) that allows fast analysis.","Cube",{alt:["data cube","olap cube"]}]
+]],
+["olap","olap-schema","REV",1,[
+ ["Dimensions denormalized: one table per dimension.","Star",{alt:["star schema"]}],
+ ["Dimensions normalized into several related tables.","Snowflake",{alt:["snowflake schema"]}],
+ ["One hop from fact to dimension.","Star",{alt:["star schema"]}],
+ ["Several hops; slower because of more joins.","Snowflake",{alt:["snowflake schema"]}],
+ ["Some redundancy; relies on the ETL to keep it clean.","Star",{alt:["star schema"]}],
+ ["Less redundancy; integrity better enforced by the model.","Snowflake",{alt:["snowflake schema"]}]
+]],
+["olap","olap-schema","OLS",0,[
+ ["OLAP slides: its main benefit is that it uses smaller disk space.","Snowflake",{alt:["snowflake schema"]}],
+ ["The most commonly used and simplest style of dimensional modeling.","Star",{alt:["star schema"]}]
+]],
+["olap","olap-schema","CD",0,[
+ ["Multiple fact tables share dimension tables (e.g., projected expense and actual expense).","Fact constellation"]
+]],
+["olap","dw-card","DWM",0,[
+ ["Star schema: relationship between the fact table and each dimension table.","Many-to-one (M:1)",{alt:["many to one","m:1","many-to-one"]}]
+]],
+["olap","olap-key","DWM",0,[
+ ["The fact table's primary key is a ___ key, always formed by combining the foreign keys to the dimension tables.","Composite",{alt:["composite primary key","composite key"]}]
+]],
+["olap","olap-ops","REV",1,[
+ ["Aggregate up a hierarchy: day to month to year.","Roll-up",{alt:["rollup","roll up","drill-up","drill up"]}],
+ ["The opposite of roll-up: move to a lower level of detail.","Drill-down",{alt:["drill down","drilldown"]}],
+ ["Fix ONE dimension and look at the rest: 'only 2026.'","Slice"],
+ ["Fix SEVERAL dimensions at once: '2026, in Texas, for laptops.'","Dice"],
+ ["Rotate the cube to put a different dimension on the axis.","Pivot"]
+]],
+["olap","olap-ops","OLS",0,[
+ ["OLAP slides: an operation involving (across) more than one fact table.","Drill across",{alt:["drill-across"]}]
+]],
+["olap","olap-ops","DWM",0,[
+ ["DWM: pivot (cross tabulation) is also called ___.","Rotation"],
+ ["DWM example: weekly to quarterly to annually.","Roll-up",{alt:["rollup","roll up","drill-up","drill up"]}],
+ ["DWM example: products divided into styles and regions into sub-regions.","Drill-down",{alt:["drill down","drilldown"]}]
+]],
+["olap","olap-srv","REV",1,[
+ ["Data sits in a relational database. Flexible, scales to big data, slower to answer.","ROLAP"],
+ ["Data sits in a multidimensional store (a real cube). Very fast, but the cube must be built and sized in advance.","MOLAP"],
+ ["Summaries in the cube, detail left relational. Some of the speed, some of the flexibility.","HOLAP"],
+ ["The engine underneath MOLAP.","MDBMS",{alt:["multidimensional database management system"]}]
+]],
+["olap","olap-srv","OLS",0,[
+ ["ROLAP vs MOLAP slide: very easy to implement; high response time; requires less memory.","ROLAP"],
+ ["ROLAP vs MOLAP slide: less response time due to prefabricated cubes; requires a large amount of memory.","MOLAP"]
+]],
+["olap","olap-acr","REV",1,[
+ ["MDBMS stands for ___.","Multidimensional Database Management System",{alt:["multi-dimensional database management system"]}]
+]],
+["olap","olap-acr","OLS",0,[
+ ["OLAP stands for ___.","Online Analytical Processing",{alt:["on-line analytical processing"]}],
+ ["OLTP stands for ___.","Online Transaction Processing",{alt:["on-line transaction processing"]}],
+ ["ROLAP stands for ___.","Relational Online Analytical Processing"],
+ ["MOLAP stands for ___.","Multidimensional Online Analytical Processing",{alt:["multi-dimensional online analytical processing"]}]
+]],
+["olap","olap-hyper","OLS",0,[
+ ["MDBMS: data cubes can grow to n dimensions, becoming ___.","Hypercubes",{alt:["hypercube"]}]
+]],
+["olap","olap-prod","CD",0,[
+ ["CD paper: example of a MOLAP server.","Essbase",{alt:["essbase (arbor)","arbor essbase"]}],
+ ["CD paper: example of a ROLAP server.","MicroStrategy"],
+ ["CD paper: example of a specialized SQL server for star and snowflake schemas.","Redbrick",{alt:["red brick"]}]
+]],
+["olap","olap-vs","REV",1,[
+ ["Purpose: record transactions.","OLTP"],
+ ["Purpose: analyse transactions.","OLAP"],
+ ["Typical operation: insert, update, small reads.","OLTP"],
+ ["Typical operation: large aggregating reads.","OLAP"],
+ ["Data age: historical.","OLAP"],
+ ["Data age: current.","OLTP"],
+ ["Design: normalized.","OLTP"],
+ ["Design: denormalized, dimensional.","OLAP"],
+ ["Users: fewer; analysts and managers.","OLAP"],
+ ["Users: many; operational staff.","OLTP"]
+]],
+["olap","olap-vs","OLS",0,[
+ ["Table 3.5 execution speed: slow (resource intensive, complex, large-scale queries).","OLAP"],
+ ["Table 3.5 data source: a transaction database, a normalized repository focused on efficiency and consistency.","OLTP"]
+]],
+["olap","olap-vs","CD",0,[
+ ["CD paper: maximizing transaction throughput is the key performance metric.","OLTP"],
+ ["CD paper: query throughput and response times matter more than transaction throughput.","OLAP"]
+]],
+["olap","olap-cube","CD",0,[
+ ["Given a list of k columns, the SQL Cube operator provides a group-by for each of the ___ combinations of columns.","2^k",{alt:["2 to the k","2 to the power of k","2 to the power k","two to the k","2**k"]}],
+ ["ROLLUP of (Product, Year, City) produces how many group-bys?","3",{alt:["three"],x:"(Product, Year, City), then (Product, Year), then (Product)."}]
+]],
+["olap","olap-why","OLS",0,[
+ ["OLAP slides: OLAP can answer 'who?' and 'what?', plus 'what if?' and '___?'","Why"]
+]],
+["olap","olap-join","CD",0,[
+ ["CD paper: this kind of index relates dimension values to matching fact-table rows; it 'essentially precomputes a binary join.'","Join index",{alt:["join"]}]
+]],
+
+/* ---------------- DATA INTEGRATION & ETL ---------------- */
+["etl","etl-tech","REV",1,[
+ ["Integration technique: everything is pulled into one store. One copy; as fresh as the last load.","Consolidation (ETL)",{alt:["consolidation","etl"]}],
+ ["Integration technique: a virtual view queries the sources on demand. No copy; live.","Federation (EII)",{alt:["federation","data federation","eii"]}],
+ ["Integration technique: changes are pushed between systems. Many copies; near real time.","Propagation (EAI / EDR)",{alt:["propagation","data propagation","eai","edr"]}],
+ ["Which integration technique gives LIVE data without copying it?","Federation (EII)",{alt:["federation","data federation","eii"]}]
+]],
+["etl","etl-fresh","REV",1,[
+ ["Freshness of propagation.","Near real time",{alt:["near real-time","near-real-time"]}],
+ ["Freshness of consolidation.","As fresh as the last load",{kw:[["last load"]]}],
+ ["Freshness of federation.","Live"]
+]],
+["etl","etl-copy","REV",1,[
+ ["Is the data copied under propagation?","Yes, many copies",{kw:[["many"]]}],
+ ["Is the data copied under consolidation?","Yes, one copy",{kw:[["one"]]}],
+ ["Is the data copied under federation?","No",{alt:["no copy","none"]}]
+]],
+["etl","etl-map","REV",1,[
+ ["The design work done before any ETL code: understand requirements, design the target, map every target field to a source field, write the rules, plan the flow.","Mapping and metadata",{alt:["mapping and metadata management","mapping"],kw:[["mapping"]]}]
+]],
+["etl","etl-steps","REV",1,[
+ ["ETL step: get the data out of the source. Fixes: the data is locked inside operational systems.","Capture / Extract",{alt:["capture","extract","extraction"]}],
+ ["ETL step: correct errors and inconsistencies. Misspellings, TX vs Texas vs Tex, missing values, wrong field used.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing","cleaning"]}],
+ ["ETL step: reshape to the warehouse model. Fixes: source structure does not match the target.","Transform",{alt:["transformation"]}],
+ ["ETL step: write it and make it fast to read. Fixes: raw loaded data is slow to query.","Load / Index",{alt:["load","index","load and index"]}]
+]],
+["etl","etl-steps","DI",0,[
+ ["DI slides: decoding, reformatting, time stamping, conversion, key generation, merging, error detection/logging, locating missing data.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing"]}]
+]],
+["etl","etl-ext","REV",1,[
+ ["A snapshot of everything, at a point in time. Used for the initial load.","Static extract",{alt:["static"]}],
+ ["Only what changed since the last run. Used for every load after the first.","Incremental extract",{alt:["incremental"]}]
+]],
+["etl","etl-marker","REV",1,[
+ ["Incremental extract needs a reliable change marker: a timestamp, a log or a ___.","Flag"]
+]],
+["etl","etl-rej","REV",1,[
+ ["Data status: Extracted → Transformed → Loaded, with ___ for rows that fail validation or a transformation rule.","Rejected"]
+]],
+["etl","etl-recon","REV",1,[
+ ["Reconciliation: compare individual records between source and target.","Row level",{alt:["row-level"]}],
+ ["Reconciliation: compare values within specific columns.","Column level",{alt:["column-level"]}],
+ ["Reconciliation: match records on their unique identifier.","Key based",{alt:["key-based"]}]
+]],
+["etl","etl-tf","REV",1,[
+ ["Transformation level that operates on whole rows (selection, joining, normalization, aggregation).","Record level",{alt:["record-level"]}],
+ ["Transformation level that works on one value at a time (string, numeric, date/time, conditional).","Single field level",{alt:["single-field","single field","single-field level"]}],
+ ["Transformation level: many source fields into one target, or one source field into many.","Multi field level",{alt:["multi-field","multifield","multi-field level"]}]
+]],
+["etl","etl-rec","DI",1,[
+ ["Record-level function: partitioning data according to predefined criteria.","Selection"],
+ ["Record-level function: combining data from various sources into a single table.","Joining"],
+ ["Record-level function: producing smaller, well-structured relations (a split).","Normalization",{alt:["normalisation"]}],
+ ["Record-level function: transforming data from detailed to summary level.","Aggregation"]
+]],
+["etl","etl-sf","DI",0,[
+ ["Single-field transformation that uses a formula or logical expression.","Algorithmic"],
+ ["Single-field transformation that uses a separate table keyed by source record code.","Table lookup"],
+ ["Single-field transformation in its general form: some function translates data from old form to new form.","Basic",{alt:["basic representation"]}]
+]],
+["etl","etl-load","REV",1,[
+ ["Load mode: the whole target is rewritten at intervals (bulk rewriting).","Refresh mode",{alt:["refresh"]}],
+ ["Load mode: only the changed rows are written.","Update mode",{alt:["update"]}]
+]],
+["etl","etl-trans","DI",0,[
+ ["Reconciled data layer: typical operational data is ___, not historical.","Transient"]
+]],
+["etl","etl-3nf","DI",0,[
+ ["After ETL, reconciled data should be normalized to ___ or higher.","3rd normal form",{alt:["3nf","third normal form"]}]
+]],
+["etl","etl-di","IM3",0,[
+ ["Umbrella term for three processes: accessing the data, combining different views of it, and capturing changes to it.","Data integration"]
+]],
+["etl","etl-view","DI",0,[
+ ["Data integration creates a unified ___ of business data.","View"]
+]],
+["etl","bi-pct","DW26",0,[
+ ["ETL can consume up to this share of the effort of building a warehouse.","80%",{alt:["80 percent","eighty percent","80"]}]
+]],
+["etl","dw-layer","DWM",0,[
+ ["Where data is dumped so that all the ETL activities can be executed.","Staging area",{alt:["staging"]}]
+]],
+["etl","etl-back","DWM",0,[
+ ["Upgrading the source data by returning cleaned data to it.","Back flushing",{alt:["backflushing","back-flushing"]}]
+]],
+["etl","etl-sem","PON",0,[
+ ["Semantic standardization: two or more terms from different sources mean the same thing, so you resolve the ___.","Synonyms",{alt:["synonym"]}],
+ ["Semantic standardization: a single term means different things in different sources, so you resolve the ___.","Homonym",{alt:["homonyms"]}]
+]],
+["etl","etl-surr","PON",0,[
+ ["Warehouse primary keys cannot have built-in meanings, so transformation assigns ___ keys derived from source keys.","Surrogate",{alt:["surrogate keys"]}]
+]],
+["etl","etl-clean","CD",0,[
+ ["Cleaning tools that let simple transformation rules be specified ('replace the string gender by sex').","Data migration tools",{alt:["data migration","migration tools"]}],
+ ["Cleaning tools that use domain-specific knowledge (e.g., postal addresses), parsing and fuzzy matching.","Data scrubbing tools",{alt:["data scrubbing","scrubbing tools"]}],
+ ["Cleaning tools that discover rules and relationships by scanning data; variants of data mining.","Data auditing tools",{alt:["data auditing","auditing tools"]}]
+]],
+["etl","etl-repl","CD",0,[
+ ["Replication using after_row triggers and a snapshot log table.","Data shipping"],
+ ["Replication that 'sniffs' the regular transaction log and needs no triggers.","Transaction shipping"]
+]],
+["etl","etl-tools","DI",0,[
+ ["Component of Microsoft SQL Server for data integration and ETL development.","SSIS",{alt:["sql server integration services","sql server integration service"]}]
+]],
+["etl","etl-ssbi","DI",0,[
+ ["SQL Server BI component for data mining (alongside SSIS).","Analysis Services"],
+ ["SQL Server BI component for server-based reporting.","Reporting Services"]
+]],
+["etl","etl-ssis","DI",0,[
+ ["SSIS term: the unit of work; any development done in SSIS.","Package"],
+ ["SSIS term: connection string information for your sources and destinations.","Connection manager"],
+ ["SSIS term: order of operations and flow of the package.","Control flow"],
+ ["SSIS term: the task that coordinates data movement and transformation.","Data flow"],
+ ["SSIS term: lets you control what happens when an error occurs.","Event handler"],
+ ["SSIS term: part of control flow that directs movement between multiple control flow tasks.","Precedence constraints",{alt:["precedence constraint"]}],
+ ["SSIS term: lets you apply business rules while loading into destinations.","Transformations",{alt:["transformation"]}]
+]],
+["etl","etl-agent","DI",0,[
+ ["SSIS packages are deployed and scheduled with ___.","SQL Server Agent"]
+]],
+
+/* ---------------- ALTERYX ---------------- */
+["alx","alx-self","REV",1,[
+ ["Alteryx Designer is ___ ETL: it installs on your own machine.","Self-service",{alt:["self service"]}]
+]],
+["alx","alx-doc","REV",1,[
+ ["The Alteryx workflow you build is both the process and its ___.","Documentation"]
+]],
+["alx","alx-parts","REV",1,[
+ ["Every Alteryx tool has the same three parts: an input anchor, a ___, and an output anchor.","Configuration panel",{alt:["configuration"]}]
+]],
+["alx","alx-flow","REV",1,[
+ ["On the Alteryx canvas, data flows ___.","Left to right"]
+]],
+["alx","alx-tools","REV",1,[
+ ["Choose which COLUMNS go forward; rename them; change their data type.","Select"],
+ ["Choose which ROWS go forward. Two outputs: T and F.","Filter"],
+ ["Create a new column, or update an existing one, from an expression.","Formula"],
+ ["Reorder rows by one or more columns.","Sort"],
+ ["Keep the first N, last N, every Nth, or a percentage, for testing before running the whole file.","Sample"],
+ ["Remove duplicate rows based on the columns you choose.","Unique"],
+ ["Group rows and aggregate them: sum, count, min, max, average.","Summarize",{alt:["summarise"]}],
+ ["There is NO separate Group By tool. Which tool does the grouping?","Summarize",{alt:["summarise"]}],
+ ["Combine two streams by matching on a key. Three outputs: L, J and R.","Join"],
+ ["Stack two streams with the same columns: more rows, same columns.","Union"],
+ ["Pair every row of one stream with every row of another. Row counts multiply.","Append Fields",{alt:["append","append field"]}],
+ ["Split one column holding several values into separate columns.","Text to Columns",{alt:["text to column"]}],
+ ["Convert between text and a real date, in either direction.","DateTime",{alt:["date time"]}],
+ ["Remove nulls, whitespace, punctuation and unwanted characters; change letter case.","Data Cleansing"],
+ ["Show the data at any point in the workflow.","Browse"],
+ ["Read data in, write results out.","Input Data / Output Data",{alt:["input data","output data","input","output"]}]
+]],
+["alx","alx-tools","DI",0,[
+ ["Renames fields, e.g., takes field names from the first row of data.","Dynamic Rename"]
+]],
+["alx","alx-out","REV",1,[
+ ["Filter tool outputs.","T and F",{alt:["t f","t/f","true and false"]}],
+ ["Join tool outputs.","L, J and R",{alt:["l j r","ljr","l j and r"]}]
+]],
+["alx","alx-shape","REV",1,[
+ ["A JOIN matches rows on a key and makes the result ___.","Wider"],
+ ["A UNION stacks rows and makes the result ___.","Longer"],
+ ["Append Fields matches on nothing at all, so the row count ___.","Multiplies"]
+]],
+["alx","alx-30","DI",0,[
+ ["Alteryx supports connection to how many file types?","30+",{alt:["30","over 30","more than 30","30 plus"]}]
+]],
+["alx","alx-sort","DI",0,[
+ ["Sort tool default order.","Ascending"]
+]],
+["alx","alx-wild","DI",0,[
+ ["Character used by the Input Data tool to read in multiple files at once.","*",{alt:["asterisk","wildcard","star"]}]
+]],
+["alx","alx-why","DI",0,[
+ ["Why Alteryx: requires no coding; easy to learn and start using.","Easy"],
+ ["Why Alteryx: workflows are reusable, with consistent results every time.","Repeatable"],
+ ["Why Alteryx: transparent at every processing step; does not alter source data.","Auditable"],
+ ["Why Alteryx: workflows are self-documenting processes ready for handoff.","Transferable"],
+ ["Why Alteryx: works well with visualization tools, external applications and APIs.","Extensible"],
+ ["Why Alteryx: database and server tools boost processing power for big data.","Scalable"],
+ ["Why Alteryx: enables iterative development by processing large datasets quickly.","Fast"]
+]],
+["alx","alx-text","REV",1,[
+ ["Why data preparation matters: raw data often has dates stored as ___.","Text",{alt:["strings","string"]}]
+]]
+];
+
+/* ===== ACTIVITIES =====
+   type 'mc': questions with options; c = index of correct; why = rationale shown after answering. */
+const ACTIVITIES = [
+{
+ id: "check", title: "Check Yourself", sub: "Data Warehousing F26 slides", src: "DW26",
+ note: "Six 'Check Yourself' prompts from the F26 deck. The slides pose these but don't print answers, so each answer below is the one the same deck's tables support, and the rationale says which slide.",
+ type: "mc",
+ qs: [
+  { q: "A retailer overwrites a customer's address whenever the customer moves. Which of the four characteristics has been broken?",
+    o: ["Nonvolatile", "Subject-oriented", "Integrated", "Time-variant"], c: 0,
+    why: "The F26 characteristics table gives this exact case as the Non-volatile example: 'A 2021 report still shows the customer's 2021 address.' The F25 slides say the same: address changes are preserved historically." },
+  { q: "Same retailer: which report breaks as a result?",
+    o: ["A sales-by-region report for a past year, which now shows today's address", "Today's order-entry screen", "The live checkout", "The current inventory count"], c: 0,
+    why: "F25 Non-Volatile slide: 'Customer address changes are preserved historically, so a sales-by-region report from five years ago reflects the correct past address.' Overwrite the address and the old report moves customers into the wrong region." },
+  { q: "Your CFO wants a dashboard refreshed every 10 seconds from the live order system. Is a data warehouse the right answer?",
+    o: ["No. A warehouse holds periodic snapshots. The deck's option for near-real-time queries is an operational data store (ODS)", "Yes. Warehouses are real-time by design", "No. Point the dashboard straight at the live order system", "Yes, but only as a data lake"], c: 0,
+    why: "F26 OLTP vs DW table: data latency is 'Real-time' for OLTP but 'Periodic snapshots, including history' for the warehouse. The ODS is 'a staging area that also allows queries, for analysis that needs near-real-time data.' Querying the live system directly 'slows down the checkout line.' The hint on the slide is 'latency vs. history.'" },
+  { q: "A report shows revenue of $4.2M. A manager asks where that number came from. Which layer answers the question?",
+    o: ["Metadata", "The staging area", "The warehouse core", "The data marts"], c: 0,
+    why: "F26: 'Metadata describes every arrow in this diagram. Without it nobody can trace where a number came from.' Metadata 'identifies and defines every element: source, transformation, storage, usage, history. This is what makes a number auditable.'" },
+  { q: "A 60-person firm needs marketing reporting live within six weeks and has one data engineer. Which architecture fits, and what do you give up?",
+    o: ["Independent data marts. You give up a single version of the truth", "Hub-and-spoke. You give up nothing", "Centralized warehouse. You give up governance", "Federated. You give up a physical store"], c: 0,
+    why: "F26 five-architectures table: independent data marts are 'Fast to stand up; no single version of the truth.' Hub-and-spoke is 'slower and costlier to start.' One department, six weeks and one engineer all point to speed. The slide asks you to 'name the trade-off explicitly.'" },
+  { q: "Finance and Sales each built their own independent mart. Both report 'revenue' and the numbers disagree by 3%. What went wrong?",
+    o: ["Each mart has its own ETL and definitions, which rebuilds the silo problem one layer up", "The marts were built from the EDW", "The warehouse was not time-variant", "The marts used a star schema"], c: 0,
+    why: "F26 Dependent vs Independent slide: 'Independent marts are quicker. Build several of them and you have rebuilt the silo problem from the start of this session, one layer up.' Silos = 'sales, marketing and finance use different words for the same customer.'" },
+  { q: "Same scenario: which mart type fixes it?",
+    o: ["Dependent", "Independent", "Virtual", "Hybrid"], c: 0,
+    why: "F26 four-kinds table: Dependent marts draw 'directly from a central data warehouse.' Use them when 'an EDW already exists and you want consistency.' The review adds that a dependent mart 'inherits the EDW's model and definitions', so both marts would share one definition of revenue." },
+  { q: "Your team wants to keep five years of raw clickstream JSON 'in case we need it later.' Warehouse or lake?",
+    o: ["Data lake", "Data warehouse", "Data mart", "ODS"], c: 0,
+    why: "F26 warehouse vs lake table: a lake holds 'any data in raw or native format', is 'designed for low-cost storage', and is schema-on-read, so you transform 'before analysis.' A warehouse wants 'structured, processed' data transformed 'before entering the warehouse.'" }
+ ]
+},
+{
+ id: "im3", title: "Ch. 3 Review Questions", sub: "Instructor Manual answer key", src: "IM3",
+ note: "Built from the Chapter 3 instructor manual, which contains the textbook's answer key. The wrong options are true statements taken from other answers in the manual.",
+ type: "mc",
+ qs: [
+  { q: "How does a data warehouse differ from a database?",
+    o: ["It is a database, but highly denormalized for performance, which works because its content is never updated, just added to", "It is highly normalized to avoid update anomalies", "It holds only the current values used to run the business", "It is a database from which the business operates on an ongoing basis"], c: 0,
+    why: "Manual §3.2 Q2: 'most databases are highly normalized, in part to avoid update anomalies. Data warehouses are highly denormalized for performance reasons. This is acceptable because their content is never updated, just added to.'" },
+  { q: "Per the instructor manual, what is an ODS?",
+    o: ["The database from which a business operates on an ongoing basis", "An all-encompassing DW covering all subject areas of interest to the entire organization", "A smaller DW designed around one problem, function or topic", "Data about data"], c: 0,
+    why: "Manual §3.2 Q3–4. The other options are its definitions of an EDW, a data mart and metadata. Note: your Midterm Review words this differently ('staging for recent operational data on its way in; current, not historical'). Know both." },
+  { q: "What is the key difference between a two-tier and a three-tier architecture?",
+    o: ["In two-tier, the application and DW reside on the same machine; in three-tier, on separate machines. The user can't see the difference", "Two-tier has no client system", "Three-tier removes the need for ETL", "Users get a different interface in each"], c: 0,
+    why: "Manual §3.4 Q1: 'Both provide the same user visibility... in a two-tiered architecture, the application and data warehouse reside on the same machine; in a three-tiered architecture, they are on separate machines.'" },
+  { q: "Which data warehousing architecture is the best?",
+    o: ["No claim can be made. The bus, hub-and-spoke and centralized architectures scored very similar averages", "Hub-and-spoke, because it has the strongest integration", "Independent data marts, because they are fastest", "Federated, because no new physical store is needed"], c: 0,
+    why: "Manual §3.4 Q5, referring to Table 3.1: 'The differences are sufficiently small that no claims can be made for a particular architecture's superiority over the others.'" },
+  { q: "Describe data integration.",
+    o: ["An umbrella term for accessing the data, combining different views of it, and capturing changes to it", "Extraction, transformation and load", "Consolidation, federation and propagation", "Collect, integrate, store, analyse, present"], c: 0,
+    why: "Manual §3.5 Q1: 'Data integration is an umbrella term that covers three processes... accessing the data, combining different views of the data, and capturing changes to the data.' The others are the ETL steps, the three integration techniques, and the BI process." },
+  { q: "Why is the ETL process so important for data warehousing?",
+    o: ["It is how data gets loaded, so a DW couldn't exist without it, and it contributes to data quality", "It lets users query the sources live without copying data", "It keeps the warehouse in third normal form", "It replaces the need for metadata"], c: 0,
+    why: "Manual §3.5 Q3: 'Since ETL is the process through which data are loaded into a data warehouse, a DW could not exist without it. The ETL process also contributes to the quality of the data in a DW.'" },
+  { q: "What is a cube?",
+    o: ["A multidimensional data structure (actual or virtual) that allows fast analysis of data", "A two-dimensional subset of a multidimensional array", "A slice on more than two dimensions", "A table of numeric measures with foreign keys to dimensions"], c: 0,
+    why: "Manual §3.6 Q4. The wrong options are its definitions of a slice and a dice, and the review's definition of a fact table." },
+  { q: "How does the manual define dice?",
+    o: ["A slice on more than two dimensions of a data cube", "Navigating from the most summarized to the most detailed level", "A subset of a multidimensional array for a single value of one dimension", "Rotating a report's dimensional orientation"], c: 0,
+    why: "Manual §3.6 Q4: 'The dice operation is a slice on more than two dimensions of a data cube.' (Your review puts it as 'fix SEVERAL dimensions at once.')" },
+  { q: "What are the DW scalability issues?",
+    o: ["Amount of data, how quickly it's expected to grow, number of concurrent users, complexity of user queries", "Financial strength, ERP linkages, qualified consultants, market share", "Policies, logical security, physical access, internal control review", "Sponsorship, expectations, politics, data availability"], c: 0,
+    why: "Manual §3.7 Q4. The other options are the vendor-selection criteria (§3.6 Q2), the four security areas (§3.8 Q1), and pieces of the risks list (§3.7 Q3)." },
+  { q: "When is Kimball's approach most effective?",
+    o: ["To provide a 'proof of concept' before a full-scale EDW, or when a well-defined area with the greatest benefits can be identified", "When there's a recognized need for an EDW, an executive champion, and willingness to invest before results", "When the business is stable and wants a unified single source of truth", "When the organization needs very low data redundancy"], c: 0,
+    why: "Manual end-of-chapter Q7. The second option is its description of when Inmon's approach works. The last two are the Data Mart slides' reasons to prefer Inmon." },
+  { q: "Which is one of the four areas effective DW security should focus on?",
+    o: ["Limiting physical access to the data center environment", "Choosing a data warehouse manager who is technology oriented", "Loading the warehouse with information because it is available", "Focusing on ad hoc data mining instead of alerts"], c: 0,
+    why: "Manual §3.8 Q1 (Step 3). The other three options come from the manual's list of risks to avoid." },
+  { q: "Which is a risk the manual says to avoid when developing a DW?",
+    o: ["Believing that your problems are over when the data warehouse is up and running", "Getting senior management support and a project champion", "Having users participate in the development process", "Offloading information processing from costly operational systems"], c: 0,
+    why: "Manual §3.7 Q3 risk list. The other options are implementation guidelines (§3.7 Q2) and a DW benefit (§3.6 Q1)." },
+  { q: "When can a data mart replace a data warehouse?",
+    o: ["When all the analyses the DW would be used for can be satisfied by the mart (or several marts)", "When the mart handles some analyses but not all", "Whenever a department wants faster queries", "Never; a mart always requires an EDW"], c: 0,
+    why: "Manual discussion Q3. If the mart handles only some analyses, it complements the DW instead." },
+  { q: "The manual's six criteria for selecting a DW vendor are:",
+    o: ["Financial strength, ERP linkages, qualified consultants, market share, industry experience, established partnerships", "Product functionality, strategic vision, customer references, price, support, training", "Amount of data, growth rate, concurrent users, query complexity, security, cost", "Sponsorship, expectations, politics, design, management, external data"], c: 0,
+    why: "Manual §3.6 Q2. (It mentions product functionality, strategic vision and customer references as criteria 'one could add'.)" },
+  { q: "How has the Web influenced data warehouse design?",
+    o: ["Primarily by making Web-based data warehousing possible", "By replacing ETL with data federation", "By removing the need for a staging area", "By requiring snowflake schemas"], c: 0,
+    why: "Manual §3.4 Q2: 'Primarily by making Web-based data warehousing possible.'" }
+ ]
+},
+{
+ id: "magpie", title: "Magpie Sensing Case", sub: "Ch. 1 opening vignette", src: "CH1",
+ note: "The Chapter 1 opening vignette about vaccine cold-chain monitoring. The chapter lists discussion questions without answers. These answers come straight from the vignette text.",
+ type: "mc",
+ qs: [
+  { q: "A web dashboard graphs the temperature inside a storage unit. Set point, typical temperature range and compressor duty cycle are reported in real time. Which kind of analytics is this?",
+    o: ["Descriptive (reporting)", "Predictive", "Prescriptive", "Diagnostic"], c: 0,
+    why: "The 'What we can learn' section: 'the graphical analysis of the data (termed reporting analytics) allows users to get a good feel for the situation.' Ch. 1 later says descriptive analytics is also called reporting analytics." },
+  { q: "The system works out the thermostat's set point and alerts users if the unit is incorrectly configured for the products stored.",
+    o: ["Predictive", "Descriptive", "Prescriptive", "Diagnostic"], c: 0,
+    why: "Vignette: 'Magpie's predictive analytic algorithms can determine the set point of the storage unit's thermostat and alert the system's users if the system is incorrectly configured.'" },
+  { q: "By analyzing the temperature trend, the system flags a door left open or an incomplete seal before temperature bounds are violated.",
+    o: ["Predictive", "Prescriptive", "Descriptive", "Diagnostic"], c: 0,
+    why: "Vignette: 'Magpie's predictive analytics further report possible human errors, such as failure to shut the storage unit doors or the presence of an incomplete seal... before the temperature bounds are actually violated.'" },
+  { q: "The system helps users dial in the optimal temperature setting, balancing freezing risk against spoilage risk.",
+    o: ["Prescriptive", "Predictive", "Descriptive", "Diagnostic"], c: 0,
+    why: "Vignette: 'Prescriptive analytics help users dial in the optimal temperature setting, which helps to achieve the right balance between freezing and spoilage risk.'" },
+  { q: "Ongoing analysis of storage-unit performance is used to guide equipment purchase decisions.",
+    o: ["Prescriptive", "Predictive", "Descriptive", "Diagnostic"], c: 0,
+    why: "Vignette: 'prescriptive analytics can be used to guide equipment purchase decisions by constantly analyzing the performance of current storage units.'" },
+  { q: "How are actionable warnings delivered to users in real time?",
+    o: ["Web interface, text message, or audible alert", "Printed weekly exception reports", "A monthly e-mail digest", "Quarterly performance reviews"], c: 0,
+    why: "Vignette: human errors are reported 'by analyzing the temperature trend and alerting users via Web interface, text message, or audible alert.'" },
+  { q: "The cold chain's three major components are:",
+    o: ["Transport and storage equipment, trained personnel, and efficient management procedures", "Descriptive, predictive and prescriptive analytics", "Sensors, dashboards and alerts", "Manufacturing, distribution and dispensing"], c: 0,
+    why: "Vignette, first paragraph: the cold chain 'consists of three major components: transport and storage equipment, trained personnel, and efficient management procedures.'" },
+  { q: "Most vaccines in the cold chain are kept at what temperature?",
+    o: ["35–46 °F (2–8 °C)", "Below freezing", "Room temperature", "Whatever the thermostat's factory setting is"], c: 0,
+    why: "Vignette: 'The majority of the vaccines in the cold chain are typically maintained at a temperature of 35–46 degrees Fahrenheit [2–8 degrees Centigrade].'" },
+  { q: "A CDC study looked at cold-chain handling by 45 healthcare providers. What share had serious violations?",
+    o: ["Three-quarters", "One-quarter", "About half", "None of them"], c: 0,
+    why: "Vignette: the CDC study of 45 providers 'reported that three-quarters of the providers experienced serious cold chain violations.'" },
+  { q: "Besides showing the three levels of analytics, what else does the vignette suggest?",
+    o: ["Innovative applications of analytics can create new business ventures", "Analytics works only in large organizations", "Real-time monitoring replaces the need for trained personnel", "Descriptive analytics is enough for cold-chain safety"], c: 0,
+    why: "'Finally, this opening vignette also suggests that innovative applications of analytics can create new business ventures.'" }
+ ]
+},
+{
+ id: "cases", title: "Sabre & Seattle Children's", sub: "Ch. 1 application cases 1.1 & 1.2", src: "CH1",
+ note: "Facts and takeaways from the two application cases in Chapter 1. The case questions in the book have no printed answers, so these check the case text itself.",
+ type: "mc",
+ qs: [
+  { q: "Sabre's Enterprise Travel Data Warehouse (ETDW) was built using:",
+    o: ["Teradata", "Amazon Redshift", "Google BigQuery", "Snowflake"], c: 0,
+    why: "Case 1.1: 'Sabre developed an Enterprise Travel Data Warehouse (ETDW) using Teradata to hold its massive reservations data.'" },
+  { q: "How is the ETDW kept up to date?",
+    o: ["Near real time, with batches that run every 15 minutes", "Once a night", "Once a week", "Only when a report is requested"], c: 0,
+    why: "Case 1.1: 'ETDW is updated in near-real time with batches that run every 15 minutes.'" },
+  { q: "Sabre's Executive Dashboards run on which BI platform?",
+    o: ["Cognos 8", "Tableau", "MicroStrategy", "Power BI"], c: 0,
+    why: "Case 1.1: dashboards 'provide near-real-time executive insights using a Cognos 8 BI platform with Oracle Data Integrator and Oracle Goldengate technology infrastructure.'" },
+  { q: "At one airline, what did the Executive Dashboards replace?",
+    o: ["A once-a-week, 8-hour process of generating the same report from various data sources", "A daily 15-minute batch job", "A monthly board presentation", "The airline's reservation system"], c: 0,
+    why: "Case 1.1: the dashboards give 'a daily and intra-day snapshot of key performance indicators in a single application, replacing the once-a-week, 8-hour process of generating the same report.'" },
+  { q: "What is the lesson of the Sabre case?",
+    o: ["Organizations that used reporting only for tracking and compliance are moving toward generating actionable intelligence from transactional data", "Dashboards should replace data warehouses", "Reporting should stay flat and static", "Only external customers benefit from dashboards"], c: 0,
+    why: "'What we can learn': organizations 'that earlier used reporting only for tracking their internal business activities and meeting compliance requirements... are now moving toward generating actionable intelligence from their transactional business data.'" },
+  { q: "Which BI application did Seattle Children's implement?",
+    o: ["Tableau", "Cognos 8", "SAP BusinessObjects", "QlikView"], c: 0,
+    why: "Case 1.2: 'Seattle Children's implemented Tableau Software's business intelligence application.'" },
+  { q: "What did the patient wait-time analysis reveal?",
+    o: ["Early delays cascaded during the day, so they focused on on-time appointments", "Wait times were caused by a shortage of beds at night", "The supply chain had no inefficiencies", "Clinicians weren't using dashboards"], c: 0,
+    why: "Case 1.2: 'They found that early delays cascaded during the day. They focused on on-time appointments of patient services as one of the solutions.'" },
+  { q: "How much did Seattle Children's save from the supply chain?",
+    o: ["About $3 million", "About $300,000", "About $30 million", "It didn't report savings"], c: 0,
+    why: "Case 1.2: 'Seattle Children's saved about $3 million from the supply chain.'" },
+  { q: "What type of analytics were Seattle Children's analysts, managers and clinicians mainly using?",
+    o: ["Descriptive", "Predictive", "Prescriptive", "Diagnostic"], c: 0,
+    why: "Case 1.2: they 'are all using descriptive analytics to solve different problems in a much faster way.'" }
+ ]
+},
+{
+ id: "gsm", title: "Decision Support Matrix", sub: "Ch. 1 Figure 1.2 (Gorry & Scott-Morton)", src: "CH1",
+ note: "Place each decision from Figure 1.2 in its cell. Rows are the degree of structuredness (Simon); columns are the type of control (Anthony).",
+ type: "mc",
+ qs: (function(){
+   const cells = {1:"Structured · Operational control",2:"Structured · Managerial control",3:"Structured · Strategic planning",
+     4:"Semistructured · Operational control",5:"Semistructured · Managerial control",6:"Semistructured · Strategic planning",
+     7:"Unstructured · Operational control",8:"Unstructured · Managerial control",9:"Unstructured · Strategic planning"};
+   const near = {1:[2,4,7],2:[1,5,3],3:[2,6,9],4:[1,5,7],5:[2,4,6],6:[3,5,9],7:[4,8,1],8:[5,7,9],9:[6,8,3]};
+   const items = [["Accounts receivable",1],["Order entry",1],["Budget analysis",2],["Make-or-buy",2],["Investment portfolio",3],["Warehouse location",3],
+     ["Inventory control",4],["Production scheduling",4],["Credit evaluation",5],["Project scheduling",5],["Mergers & acquisitions",6],["New product planning",6],
+     ["Approving loans",7],["Selecting a cover for a magazine",7],["Recruiting an executive",8],["Negotiating",8],["R & D planning",9],["Social responsibility planning",9]];
+   return items.map(([d,c]) => ({ q: "Which cell does '" + d + "' belong in?", o: [cells[c]].concat(near[c].map(n=>cells[n])), c: 0,
+     why: "Figure 1.2 places '" + d + "' in cell " + c + " (" + cells[c] + ")." + (c===1||c===2||c===4 ? " Cells 1, 2 and 4 are usually handled by lower-level managers." : (c===6||c===8||c===9 ? " Cells 6, 8 and 9 are the responsibility of top executives or highly trained specialists." : "")) }));
+ })()
+},
+{
+ id: "match", title: "Match the Columns", sub: "Ponniah Ch. 2, Exercise 1", src: "PON",
+ note: "Exercise 1 from the end of Ponniah Chapter 2. The book prints no answer key. Each pair below comes from the chapter text, and the rationale quotes the line that supports it. 'Decision support → subject-oriented' is the pairing left over once the other nine are placed.",
+ type: "match",
+ pairs: [
+  ["nonvolatile data", "read-only", "'For this reason, the data warehouses are \"read-only\" data repositories.' Data in the warehouse 'is primarily for query and analysis.'"],
+  ["dual data granularity", "details and summary", "Figure 2-4: 'Many data warehouses have at least dual levels of granularity.' The banking example keeps daily detail plus monthly and quarterly summaries."],
+  ["dependent data mart", "data from main data warehouse", "Figure 2-5 approach (1): an 'overall data warehouse feeding dependent data marts.'"],
+  ["disparate data", "because of multiple sources", "'The significant and disturbing characteristic of production data is disparity,' because the data comes from many different operational systems."],
+  ["decision support", "subject-oriented", "The warehouse exists for decision support and 'data is stored by subjects, not by applications.' This is also the only label left once the other nine are matched."],
+  ["data staging", "workbench for data integration", "'The data staging component consists of a workbench for these functions' (extract, transform, prepare for loading)."],
+  ["data mining", "knowledge discovery", "'Data-mining applications are knowledge discovery systems.'"],
+  ["metadata", "roadmap for users", "Chapter summary: metadata 'serves as a roadmap for the end-users.'"],
+  ["operational systems", "application flavor", "Operational data sets 'are organized around individual applications.' By contrast, 'in a data warehouse, there is no application flavor.'"],
+  ["internal data", "private spreadsheets", "'Users keep their \"private\" spreadsheets, documents, customer profiles... This is the internal data.'"]
+ ]
+},
+{
+ id: "star", title: "STAR Model Activity", sub: "In-class activity, Data Warehousing F26", src: "DW26",
+ note: "The in-class STAR-model activity (10 points). The Excel dataset and Word worksheet weren't attached, so this covers the target shape, point values and submission rules from the slides, not the model answers.",
+ type: "mc",
+ qs: [
+  { q: "What does one row of the activity's source extract represent?",
+    o: ["One invoice line", "One customer", "One store per day", "One product"], c: 0,
+    why: "'A flat extract from a retailer's point-of-sale system. One row per invoice line; store, customer, product and sales values repeat on every row.'" },
+  { q: "TIME_ID, LOC_ID, CUST_ID and PROD_ID sit in the fact table as:",
+    o: ["The four foreign keys to the dimensions", "Measures", "Degenerate attributes", "Dimension attributes"], c: 0,
+    why: "Target shape: SALES_FACT has 'Four foreign keys: TIME_ID, LOC_ID, CUST_ID, PROD_ID.'" },
+  { q: "SALES_QUANTITY, SALES_PRICE and SALES_TOTAL are the fact table's:",
+    o: ["Measures", "Foreign keys", "Degenerate attributes", "Primary key"], c: 0,
+    why: "Target shape: 'Measures: SALES_QUANTITY, SALES_PRICE, SALES_TOTAL.'" },
+  { q: "INVOICE_NUMBER and INVOICE_LINE are listed in the fact table as:",
+    o: ["Degenerate", "Measures", "Foreign keys", "A separate dimension table"], c: 0,
+    why: "Target shape: 'Degenerate: INVOICE_NUMBER, INVOICE_LINE.' (Your slides use the word 'degenerate' but never define it.)" },
+  { q: "The four dimensions around the fact table are:",
+    o: ["Time, Location, Customer, Product", "Time, Store, Invoice, Product", "Customer, Product, Sales, Region", "Date, City, State, Country"], c: 0,
+    why: "'Four dimensions around it: TIME · LOCATION · CUSTOMER · PRODUCT, each with its own primary key and attributes.'" },
+  { q: "Relationship from the fact table to each dimension:",
+    o: ["Many-to-one", "One-to-one", "Many-to-many", "One-to-many from fact to dimension"], c: 0,
+    why: "'Every relationship is many-to-one from the fact to the dimension.' The DW Modeling slides say the same: 'Many-to-one (M:1) relationship between fact table and each dimension table.'" },
+  { q: "Which part asks for CREATE TABLE with data types, NOT NULL, PK, FK and an index?",
+    o: ["Q2, the physical model (3 pts)", "Q1, the logical model (4 pts)", "Q3, the diagram (2 pts)", "Q4, the SQL queries (1 pt)"], c: 0,
+    why: "Q1 logical model is 'tables, attributes, keys. No data types.' Q2 physical model is 'CREATE TABLE with data types, NOT NULL, PK, FK and an index.'" },
+  { q: "Which question is worth the most points?",
+    o: ["Q1, the logical model (4 pts)", "Q2, the physical model (3 pts)", "Q3, the STAR diagram (2 pts)", "The bonus (+1)"], c: 0,
+    why: "Points: Q1 = 4, Q2 = 3, Q3 = 2, Q4 = 1, Bonus = +1. Total 10 plus bonus." },
+  { q: "What happens if you email or upload your diagram separately instead of pasting it into the Q3 box?",
+    o: ["Q3 scores zero", "It's accepted as long as it's on time", "You lose one point", "It counts for the bonus"], c: 0,
+    why: "Submission rules: 'A diagram emailed or uploaded separately scores zero for Q3.'" },
+  { q: "What do you submit?",
+    o: ["Only the Word document, renamed STAR-Model-<YourNetID>.docx", "The Word document and the Excel file", "A PDF of your diagram", "Your own new Word file"], c: 0,
+    why: "'You submit ONE file: the Word document. Rename it to STAR-Model-<YourNetID>.docx... Do not send the Excel file back... Do not create your own file.'" },
+  { q: "What must your fact table be named?",
+    o: ["SALES_FACT_<YourNetID>", "FACT_SALES", "STAR_MODEL_<YourNetID>", "SALES_<YourNetID>"], c: 0,
+    why: "'Name your fact table SALES_FACT_<YourNetID>. It must match the NetID you type at the top of page 1.'" }
+ ]
+},
+{
+ id: "alteryx", title: "Alteryx Tool Examples", sub: "Worked examples on the Integration slides", src: "DI",
+ note: "Built from the example tables on the Alteryx slides. Where a slide shows only the inputs (Join, Append Fields), the output is worked out from the review's rule, and the rationale says so.",
+ type: "mc",
+ qs: [
+  { q: "Formula tool slide: Pearl has Total Sales $73,600.00 and Customer Count 230. What is Avg Sales Per Cust?",
+    o: ["$320.00", "$280.00", "$296.05", "$195.00"], c: 0,
+    why: "The slide's output column shows Pearl = $320.00 (73,600 ÷ 230). The other values are Hill, North and South." },
+  { q: "Summarize slide: Group By Customer, Sum Sales. What is Bob Dude's total?",
+    o: ["265", "120", "190", "75"], c: 0,
+    why: "The slide shows Bob Dude = 265: his rows are 120 (store A) + 20 + 50 (store B) + 75 (store D)." },
+  { q: "Summarize slide: Group By Store, Count Customers. What is the count for store B?",
+    o: ["3", "2", "1", "4"], c: 0,
+    why: "The slide's output: A = 2, B = 3, C = 1, D = 1. Store B has three rows (Billy Bonk, Bob Dude, Bob Dude)." },
+  { q: "Sort slide: sorting City/Population by Population descending. Which city comes first?",
+    o: ["New York", "Orlando", "Chicago", "Los Angeles"], c: 0,
+    why: "Population Desc.: New York 8,623,000, then Los Angeles, Chicago, Orlando." },
+  { q: "Sample slide (12 employees): 'Every 4' (1 of every N) returns:",
+    o: ["Sherry, Sara, Marty", "Sherry, Chris", "Jennifer, Karin, Kevin", "Brian, Eric, Karin"], c: 0,
+    why: "The slide's 'Every 4' output is Sherry, Sara, Marty (rows 1, 5, 9). 'Sherry, Chris' is Top 2 / Top 20%, and 'Jennifer, Karin, Kevin' is Bottom 3." },
+  { q: "Sample slide: 'Top 20%' of the 12 employees returns:",
+    o: ["Sherry, Chris", "Sherry, Sara, Marty", "Jennifer, Karin, Kevin", "Sara, Marty"], c: 0,
+    why: "The slide's Top 20% output shows Sherry and Chris." },
+  { q: "Filter slide: the True stream holds the two CA addresses (Irvine, Santa Clara). Where do Denver and Boulder (CO) go?",
+    o: ["The F (False) output", "The T (True) output", "They're deleted", "The J output"], c: 0,
+    why: "'T: The True output stream will contain rows with true filter expressions. F: The False stream will contain rows where the filter expression is false.'" },
+  { q: "Text to Columns slide: '1001 17th St, Denver, CO, 80202' split on commas. What lands in Address3?",
+    o: ["CO", "Denver", "80202", "1001 17th St"], c: 0,
+    why: "Slide output: Address1 = 1001 17th St, Address2 = Denver, Address3 = CO, Address4 = 80202." },
+  { q: "Dynamic Rename slide: 'Take Field Names from First Row of Data' turns Field1–Field4 into:",
+    o: ["Address, City, State, ZIP", "Address1, Address2, Address3, Address4", "Field1, Field2, Field3, Field4", "Street, Town, Region, Code"], c: 0,
+    why: "The first data row held 'Address, City, State, ZIP', and the slide shows those becoming the column headers." },
+  { q: "Join slide: Left IDs 12, 33, 36 and Right IDs 2, 12, 36, joined on ID = ID. Which IDs come out of the J output?",
+    o: ["12 and 36", "33 only", "2 only", "2, 12, 33, 36"], c: 0,
+    why: "Worked out from the rule (the slide's output is an image): Join 'combines two streams by matching on a key. Three outputs: L, J and R.' Only 12 and 36 appear on both sides, so they go to J. 33 goes to L and 2 goes to R." },
+  { q: "Append Fields slide: 3 store supply-request rows are appended to 2 warehouse rows. How many rows come out?",
+    o: ["6", "5", "3", "2"], c: 0,
+    why: "Worked out from the review's rule: Append Fields 'pairs every row of one stream with every row of another. Row counts multiply.' 3 × 2 = 6." }
+ ]
+},
+{
+ id: "disc", title: "BI Concepts Discussion", sub: "Your discussion questions + Ch. 1", src: "DISC",
+ note: "The five questions from your BI Concepts discussion, turned into quiz questions. The answers come from Chapter 1. Where a question asked for your opinion, the answer is marked as yours.",
+ type: "mc",
+ qs: [
+  { q: "Put BI's evolution in order:",
+    o: ["MIS reporting (1970s) → EIS (early 1980s) → BI (mid-1990s; umbrella term by 2006) → absorbed into 'analytics'", "EIS → MIS reporting → BI → analytics", "BI → EIS → MIS reporting → analytics", "MIS reporting → BI → EIS → analytics"], c: 0,
+    why: "Ch. 1 §1.7: roots in 1970s MIS reporting; EIS in the early 1980s; the term BI coined in the mid-1990s; 'by 2006' products appeared under the BI umbrella. §1.7 closes: 'in many circles BI has been subsumed by the new term analytics or data science.'" },
+  { q: "What did the EIS shift add?",
+    o: ["It expanded computerized support to top-level managers and executives", "It introduced static, two-dimensional reports", "It added artificial intelligence", "It replaced data warehouses"], c: 0,
+    why: "Ch. 1: 'In the early 1980s, the concept of executive information systems (EIS) emerged. This concept expanded the computerized support to top-level managers and executives.'" },
+  { q: "Ch. 1's four major components of a BI system:",
+    o: ["Data warehouse, business analytics, business performance management, user interface", "Data sources, ETL, data warehouse, data mining", "Collect, integrate, store, analyse", "OLAP, star schema, snowflake schema, cube"], c: 0,
+    why: "Ch. 1 §1.7: 'A BI system has four major components: a data warehouse, with its source data; business analytics...; business performance management (BPM)...; and a user interface (e.g., a dashboard).'" },
+  { q: "Which Ch. 1 component monitors and analyzes performance (checking the trend against goals)?",
+    o: ["Business performance management (BPM)", "Business analytics", "Data warehouse", "User interface"], c: 0,
+    why: "Ch. 1: 'business performance management (BPM) for monitoring and analyzing performance.'" },
+  { q: "The five BI styles (MicroStrategy):",
+    o: ["Report delivery and alerting; enterprise reporting; cube analysis; ad hoc queries; statistics and data mining", "Descriptive; diagnostic; predictive; prescriptive; cognitive", "Roll-up; drill-down; slice; dice; pivot", "Collect; integrate; store; analyse; present"], c: 0,
+    why: "Ch. 1 'Styles of BI': 'report delivery and alerting; enterprise reporting (using dashboards and scorecards); cube analysis (also known as slice-and-dice analysis); ad hoc queries; and statistics and data mining.'" },
+  { q: "An executive wants one number every morning. Which style did you pick in your discussion?",
+    o: ["Report delivery and alerting", "Cube analysis", "Ad hoc queries", "Statistics and data mining"], c: 0,
+    why: "Your answer: report delivery and alerting, because 'they do not want to explore anything, they just want the one thing that matters given straight to them.' Ch. 1 names the styles but doesn't match styles to scenarios, so this is your reasoning, not a textbook key." },
+  { q: "Your retailer scenario: 'Sales dropped 20% compared to last year.'",
+    o: ["Descriptive", "Predictive", "Prescriptive", "Diagnostic"], c: 0,
+    why: "Descriptive = 'What happened?' (WK2). Ch. 1: 'knowing what is happening in the organization.'" },
+  { q: "Your retailer scenario: 'At this rate it'll drop another 5% next quarter.'",
+    o: ["Predictive", "Descriptive", "Prescriptive", "Diagnostic"], c: 0,
+    why: "Predictive = 'What will happen?' Uses historical and current data to project what comes next (WK2)." },
+  { q: "Your retailer scenario: 'Discount it 20% in weak regions and shift shelf space to something that sells better.'",
+    o: ["Prescriptive", "Predictive", "Descriptive", "Diagnostic"], c: 0,
+    why: "Prescriptive = 'What should we do?' It 'recommends the action to take, not just the outcome to expect' (WK2)." },
+  { q: "The three components of Ch. 1's Business Pressures-Responses-Support Model:",
+    o: ["Business pressures, organizational responses, computerized support", "Markets, consumer demands, technology", "Planning, organizing, controlling", "Data, information, knowledge"], c: 0,
+    why: "Ch. 1 §1.2: 'business pressures that result from today's business climate, responses (actions taken) by companies..., and computerized support.'" }
+ ]
+}
+];
+
+/* ===== NOTES shown in the Notes tab ===== */
+const NOTES = {
+ missing: [
+  "The STAR-model activity's dataset (InClass-Activity-STAR-Model-F26-DATA.xlsx) and worksheet (.docx) weren't attached, so there's no way to check model answers or the bonus ('one region is spelled two ways').",
+  "Ch. 1's 'BSI Videos' exercise (airline rebooking) depends on a video that isn't in your files.",
+  "None of the 'Check Yourself' prompts (F26), the Ponniah exercises, or the Ch. 1 section review questions has a printed answer key. Those quiz answers come from the chapter/slide text and cite it.",
+  "Several slides are diagrams only (BI evolution figures, star/snowflake diagrams, Inmon and Kimball model pictures, the data mart 'geography / function / market-bounded' slides). Nothing on them could be turned into a question."
+ ],
+ undefined: [
+  "EII, EAI and EDR: the review uses them as labels for federation and propagation, but no document spells out what they stand for. (The integration slide also prints 'III' where the review says 'EII'.)",
+  "HOLAP: described on the review, never expanded.",
+  "3NF / third normal form: used on the review and integration slides, never defined.",
+  "ELT: listed in the F26 'Key Terms for Exam 1', never explained anywhere.",
+  "Degenerate (INVOICE_NUMBER, INVOICE_LINE in the STAR activity): used, not defined.",
+  "Conformed dimensions: used many times; Ponniah only describes the idea (a data element means the same thing in every mart).",
+  "Slowly Changing Dimension / 'Type 2 SCD': named in the F25 design example, never defined.",
+  "Oper mart: the slide's definition is just 'an operational data mart.'",
+  "Chargeback mechanism (twelve rules, rule 12) and grain: named, not explained.",
+  "Geography-bounded, function-bounded and market-bound data (Data Mart slides): slide titles only."
+ ],
+ conflicts: [
+  "ODS: the review says 'staging for recent operational data on its way in; current, not historical.' The instructor manual says 'the database from which a business operates on an ongoing basis.' F26 says 'a staging area that also allows queries.' The drill uses the review's wording.",
+  "Data mart types: the review lists three (dependent, independent, hybrid). The F26 and Data Mart slides list four (adding virtual).",
+  "Two-tier: the review describes it as client → database. F26 and the instructor manual say the first two tiers (application and warehouse) share one machine.",
+  "Metadata types: Ponniah's 'operational metadata' (about source systems) is not the same as the OLAP paper's 'operational metadata' (lineage, usage stats, audit trails). The drill keeps Ponniah's meaning.",
+  "The Star vs Snowflake comparison slide labels snowflake 'bottom up' and star 'top down', which cuts against the review (Kimball = bottom-up = star). It's left out of the drill.",
+  "The 7Ws slide deck labels Diagnostic analytics as 'What happened?'. The Week 2 deck corrects it to 'Why did it happen?', which is what the drill uses.",
+  "The review says roll-up aggregates 'up to a higher level of detail'. It means a higher level of summary (day → month → year), the opposite of drill-down."
+ ],
+ skipped: [
+  "Market-size forecasts on the Week 1 slides (IDC $189.1B, $274.3B by 2022, $90B in 2021): dated vendor forecasts, not on the review.",
+  "SSIS: it's in the integration slides and the drill, but the review never mentions it, so those items aren't tagged 'Review'."
+ ]
+};
+
+</script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- utils ---------- */
+const $ = (s, el) => (el || document).querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function hash(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function norm(s){
+  return String(s).normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+    .replace(/&/g, " and ").replace(/%/g, " percent ").replace(/\^/g, " ^ ")
+    .replace(/[^a-z0-9^* ]+/g, " ").replace(/\s+/g, " ").trim()
+    .replace(/^(the|a|an) /, "");
+}
+function stemTokens(n){ return n.split(" ").map(t => t.length > 3 && t.endsWith("s") ? t.slice(0, -1) : t).join(" "); }
+function lev(a, b){
+  if (a === b) return 0; const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = new Array(n + 1), cur = new Array(n + 1);
+  for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) { cur[0] = i;
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    [prev, cur] = [cur, prev]; }
+  return prev[n];
+}
+const digits = s => (s.match(/\d+/g) || []).join(",");
+
+/* ---------- storage ---------- */
+const KEY = "itss4351-study-v1";
+function load(){ try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") return s; } catch (e) {} return null; }
+let S = load() || {};
+S.items = S.items || {}; S.acts = S.acts || {}; S.turn = S.turn || 0;
+S.fmt = S.fmt || "mc"; S.topic = S.topic || "all"; S.rev = !!S.rev; S.weak = !!S.weak; S.theme = S.theme || "auto"; S.tab = S.tab || "drill";
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+/* ---------- build items ---------- */
+const ITEMS = []; const BYID = {};
+BLOCKS.forEach(([t, g, s, r, rows]) => rows.forEach(row => {
+  const [q, a, o] = row; const opt = o || {};
+  const id = t + "-" + hash(q);
+  const it = { id, t, g, s, r: !!r, q, a, alt: opt.alt || [], kw: opt.kw || null, x: opt.x || "" };
+  ITEMS.push(it); BYID[id] = it;
+}));
+const TOPIC = {}; TOPICS.forEach(t => TOPIC[t.k] = t);
+const GROUPS = {};
+ITEMS.forEach(it => { (GROUPS[it.g] = GROUPS[it.g] || []).push(it.a); });
+function optionsFor(it){
+  const seen = new Set([norm(it.a)]); it.alt.forEach(a => seen.add(norm(a)));
+  const pool = [];
+  shuffle(GROUPS[it.g] || []).concat(shuffle(EXTRAS[it.g] || [])).forEach(a => {
+    const n = norm(a); if (!seen.has(n)) { seen.add(n); pool.push(a); }
+  });
+  return pool.slice(0, 3);
+}
+const MC_OK = {}; ITEMS.forEach(it => { MC_OK[it.id] = optionsFor(it).length >= 1; });
+
+function rec(id){ return S.items[id] || (S.items[id] = { lv: 0, seen: 0, r: 0, w: 0, due: 0 }); }
+function status(id){ const r = S.items[id]; if (!r || !r.seen) return "unseen"; if (r.lv >= 3) return "ret"; return "l" + r.lv; }
+
+/* ---------- grading ---------- */
+function variants(it){
+  const v = [it.a].concat(it.alt);
+  const m = it.a.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  if (m) { v.push(m[1]); if (/^[A-Z0-9:\/ ]{2,}$/.test(m[2].trim())) v.push(m[2]); }
+  return v;
+}
+function grade(it, input){
+  const n = norm(input); if (!n) return { ok: false };
+  if (it.a === "*" && input.trim() === "*") return { ok: true, exact: true };
+  for (const v of variants(it)) {
+    const nv = norm(v); if (!nv) continue;
+    if (n === nv || n.replace(/ /g, "") === nv.replace(/ /g, "") || stemTokens(n) === stemTokens(nv)) return { ok: true, exact: true };
+  }
+  for (const v of variants(it)) {
+    const nv = norm(v); if (nv.length < 4) continue;
+    if (digits(n) !== digits(nv)) continue;
+    const tol = nv.length <= 6 ? 1 : nv.length <= 12 ? 2 : 3;
+    if (lev(n, nv) <= tol || lev(n.replace(/ /g, ""), nv.replace(/ /g, "")) <= tol) return { ok: true, exact: false };
+  }
+  if (it.kw && it.kw.every(slot => slot.some(k => n.includes(k)))) return { ok: true, exact: false, kw: true };
+  return { ok: false };
+}
+
+/* ---------- scheduling ---------- */
+function priority(it){ return (it.r ? 2 : 0) + (TOPIC[it.t].w === "HEAVY" ? 1 : 0); }
+const ORDER = {}; shuffle(ITEMS).sort((a, b) => priority(b) - priority(a)).forEach((it, i) => ORDER[it.id] = i);
+function pool(){
+  return ITEMS.filter(it => (S.topic === "all" || it.t === S.topic) && (!S.rev || it.r)
+    && status(it.id) !== "ret" && (!S.weak || (S.items[it.id] && S.items[it.id].w > 0))
+    && (S.fmt !== "mc" || MC_OK[it.id]));
+}
+let lastId = null;
+function pick(p, exclude){
+  p = p.filter(it => !exclude.has(it.id)); if (!p.length) return null;
+  const alt = p.length > 1 ? p.filter(it => it.id !== lastId) : p;
+  const due = alt.filter(it => S.items[it.id] && S.items[it.id].seen && S.items[it.id].due <= S.turn)
+    .sort((a, b) => S.items[a.id].due - S.items[b.id].due || S.items[a.id].lv - S.items[b.id].lv);
+  if (due.length) return due[Math.floor(Math.random() * Math.min(2, due.length))];
+  const fresh = alt.filter(it => !S.items[it.id] || !S.items[it.id].seen).sort((a, b) => ORDER[a.id] - ORDER[b.id]);
+  if (fresh.length) return fresh[0];
+  return alt.slice().sort((a, b) => S.items[a.id].due - S.items[b.id].due)[0];
+}
+function record(id, ok){
+  const r = rec(id); r.seen = 1; S.turn++;
+  if (ok) { r.r++; r.lv = Math.min(3, r.lv + 1); r.due = S.turn + (r.lv === 1 ? 4 : 9); }
+  else { r.w++; r.lv = 0; r.due = S.turn + 2; }
+  save(); renderProgress(); renderSide();
+  return r;
+}
+
+/* ---------- header ---------- */
+function renderMeta(){
+  const exam = new Date(2026, 9, 6); const today = new Date(); today.setHours(0,0,0,0);
+  const d = Math.round((exam - today) / 864e5);
+  const when = d > 1 ? " · <b>" + d + " days away</b>" : d === 1 ? " · <b>tomorrow</b>" : d === 0 ? " · <b>today</b>" : "";
+  $("#examMeta").innerHTML = "Midterm Tue 10/6" + when + " · UTD Testing Center · register 48 hrs ahead · 2 hrs · one A4 sheet";
+}
+function applyTheme(){
+  if (S.theme === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", S.theme);
+  $("#themeBtn").textContent = "Theme: " + S.theme[0].toUpperCase() + S.theme.slice(1);
+}
+$("#themeBtn").onclick = () => { S.theme = S.theme === "auto" ? "light" : S.theme === "light" ? "dark" : "auto"; save(); applyTheme(); };
+
+const LV = [["ret","Retired","--lv-ret"],["l2","Level 2","--lv-2"],["l1","Level 1","--lv-1"],["l0","Missed / level 0","--lv-0"],["unseen","Unseen","--lv-unseen"]];
+function counts(list){ const c = { ret:0, l2:0, l1:0, l0:0, unseen:0 }; list.forEach(it => c[status(it.id)]++); return c; }
+function renderProgress(){
+  const c = counts(ITEMS), n = ITEMS.length;
+  $("#bar").innerHTML = LV.map(([k,, v]) => '<span style="width:' + (c[k] / n * 100) + '%;background:var(' + v + ')" title="' + k + '"></span>').join("");
+  $("#legend").innerHTML = LV.map(([k, l, v]) => '<span><i style="background:var(' + v + ')"></i>' + l + " " + c[k] + "</span>").join("")
+    + '<span class="ret">Retired ' + c.ret + " / " + n + "</span>";
+}
+
+/* ---------- tabs ---------- */
+function renderTabs(){
+  const t = [["drill","Drill"]].concat(ACTIVITIES.map(a => ["act-" + a.id, a.title])).concat([["notes","Notes"]]);
+  $("#tabs").innerHTML = t.map(([k, l], i) => (i === 1 ? '<span class="sep" aria-hidden="true"></span>' : "") + (k === "notes" ? '<span class="sep" aria-hidden="true"></span>' : "")
+    + '<button role="tab" data-k="' + k + '" aria-selected="' + (S.tab === k) + '">' + esc(l) + "</button>").join("");
+  $("#tabs").querySelectorAll("button").forEach(b => b.onclick = () => { S.tab = b.dataset.k; save(); renderTabs(); route(); });
+  const sel = $("#tabs").querySelector('[aria-selected="true"]'); if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+function route(){
+  keyHandler = null;
+  if (S.tab === "drill") renderDrill();
+  else if (S.tab === "notes") renderNotes();
+  else { const a = ACTIVITIES.find(x => "act-" + x.id === S.tab); if (a) renderActivity(a); else { S.tab = "drill"; renderDrill(); } }
+  window.scrollTo(0, 0);
+}
+let keyHandler = null;
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (keyHandler) keyHandler(e);
+});
+
+/* ---------- drill ---------- */
+function renderDrill(){
+  const topOpts = ['<option value="all">All topics (' + ITEMS.length + ")</option>"].concat(TOPICS.map(t =>
+    '<option value="' + t.k + '"' + (S.topic === t.k ? " selected" : "") + ">" + esc(t.name) + (t.w === "HEAVY" ? " · HEAVY" : "") + " (" + ITEMS.filter(i => i.t === t.k).length + ")</option>")).join("");
+  $("#main").innerHTML =
+   '<div class="grid"><section>' +
+    '<div class="controls">' +
+     '<div class="seg" role="group" aria-label="Question format">' +
+       [["match","Matching"],["mc","Multiple choice"],["fill","Fill in the blank"]].map(([k, l]) => '<button data-f="' + k + '" aria-pressed="' + (S.fmt === k) + '">' + l + "</button>").join("") +
+     "</div>" +
+     '<label class="ctl">Topic <select id="topicSel">' + topOpts + "</select></label>" +
+     '<label class="chk"><input type="checkbox" id="revChk"' + (S.rev ? " checked" : "") + "> Review-sheet facts only</label>" +
+    "</div>" +
+    (S.weak ? '<div class="banner"><span><b>Weak-spot drill.</b> Only items you have missed.</span><button class="btn small quiet" id="exitWeak">Back to all items</button></div>' : "") +
+    '<div id="stage"></div>' +
+   "</section><aside id=side></aside></div>";
+  $("#main").querySelectorAll(".seg button").forEach(b => b.onclick = () => { S.fmt = b.dataset.f; save(); renderDrill(); });
+  $("#topicSel").onchange = e => { S.topic = e.target.value; save(); renderDrill(); };
+  $("#revChk").onchange = e => { S.rev = e.target.checked; save(); renderDrill(); };
+  if (S.weak) $("#exitWeak").onclick = () => { S.weak = false; save(); renderDrill(); };
+  renderSide();
+  nextCard();
+}
+function nextCard(){
+  if (S.fmt === "match") return renderMatch();
+  const p = pool(); const it = pick(p, new Set());
+  if (!it) return renderEmpty();
+  lastId = it.id;
+  if (S.fmt === "mc") renderMC(it); else renderFill(it);
+}
+function renderEmpty(){
+  const anyLeft = ITEMS.some(it => status(it.id) !== "ret");
+  $("#stage").innerHTML = '<div class="card"><p class="prompt">' + (S.weak ? "No weak spots left in this filter. Every item you missed has been retired or none match." : "Everything in this filter is retired.") + "</p>" +
+    '<p class="hint">' + (anyLeft ? "Widen the topic filter or turn off 'Review-sheet facts only' to keep going." : "You've retired every item in the bank.") + "</p></div>";
+}
+function head(it){
+  const r = S.items[it.id]; const lv = r && r.seen ? r.lv : 0; const tp = TOPIC[it.t];
+  return '<div class="cardhead"><span>' + esc(tp.name) + "</span>" + (tp.w === "HEAVY" ? '<span class="pill heavy">Heavy</span>' : "") +
+    (it.r ? '<span class="pill rev">On review sheet</span>' : "") +
+    '<span class="dots" title="Level ' + lv + ' of 3">' + [0,1,2].map(i => "<i" + (i < lv ? ' class="on"' : "") + "></i>").join("") + "</span></div>";
+}
+function fbHTML(ok, it, extra){
+  const r = S.items[it.id]; const lvl = r.lv >= 3 ? "Retired: three in a row. It won't come back." : ok ? "Level " + r.lv + " of 3" : "Back to level 0. It'll come back soon.";
+  return '<div class="fb ' + (ok ? "ok" : "no") + '" role="status"><div class="verdict"><span class="mark" aria-hidden="true">' + (ok ? "✓" : "✕") + "</span>" + (ok ? "Correct" : "Not quite") + "</div>" +
+    '<div class="ans">' + (ok ? "Answer: " : "Correct answer: ") + "<b>" + esc(it.a) + "</b></div>" + (extra || "") +
+    (it.x ? '<div class="why">' + esc(it.x) + "</div>" : "") +
+    '<div class="sub">' + lvl + "</div>" +
+    '<div class="src">Source: ' + esc(SOURCES[it.s]) + "</div></div>";
+}
+function nextRow(){ return '<div class="nextrow"><span class="hint" style="margin:0"><kbd>Enter</kbd> for next</span><button class="btn" id="nextBtn">Next →</button></div>'; }
+
+function renderMC(it){
+  const opts = shuffle([it.a].concat(optionsFor(it)));
+  $("#stage").innerHTML = '<div class="card">' + head(it) + '<p class="prompt">' + esc(it.q) + "</p>" +
+    '<div class="opts">' + opts.map((o, i) => '<button class="opt" data-i="' + i + '"><span class="k">' + (i + 1) + "</span><span>" + esc(o) + "</span></button>").join("") + "</div>" +
+    '<p class="hint">Press <kbd>1</kbd>–<kbd>' + opts.length + "</kbd> to answer.</p>" + '<div id="fb"></div></div>';
+  let done = false;
+  const choose = i => {
+    if (done || i < 0 || i >= opts.length) return; done = true;
+    const ok = opts[i] === it.a; record(it.id, ok);
+    $("#stage").querySelectorAll(".opt").forEach((b, j) => { b.disabled = true;
+      if (opts[j] === it.a) b.classList.add("right"); else if (j === i) b.classList.add("wrong"); else b.classList.add("dim"); });
+    $("#fb").innerHTML = fbHTML(ok, it, ok ? "" : '<div class="sub">You picked: ' + esc(opts[i]) + "</div>") + nextRow();
+    $("#nextBtn").onclick = nextCard; $("#nextBtn").focus({ preventScroll: true });
+  };
+  $("#stage").querySelectorAll(".opt").forEach(b => b.onclick = () => choose(+b.dataset.i));
+  keyHandler = e => {
+    if (!done && /^[1-9]$/.test(e.key)) { e.preventDefault(); choose(+e.key - 1); }
+    else if (done && (e.key === "Enter" || e.key === "ArrowRight")) { e.preventDefault(); nextCard(); }
+  };
+}
+
+function renderFill(it){
+  $("#stage").innerHTML = '<div class="card">' + head(it) + '<p class="prompt">' + esc(it.q) + "</p>" +
+    '<form class="fillrow" id="ff" autocomplete="off"><input id="fi" type="text" placeholder="Type your answer" aria-label="Your answer" autocapitalize="off" spellcheck="false"><button class="btn" type="submit">Check</button></form>' +
+    '<p class="hint">Spelling, capitals, punctuation and common abbreviations are forgiven. <button class="btn small quiet" id="idk" type="button">Show answer</button></p><div id="fb"></div></div>';
+  const inp = $("#fi"); let done = false;
+  setTimeout(() => inp.focus({ preventScroll: true }), 30);
+  const submit = (give) => {
+    if (done) return; const v = inp.value; if (!give && !v.trim()) { inp.focus(); return; }
+    done = true; const g = give ? { ok: false } : grade(it, v); record(it.id, g.ok);
+    inp.disabled = true; inp.classList.add(g.ok ? "right" : "wrong");
+    let extra = "";
+    if (!g.ok && v.trim()) extra = '<div class="sub">You wrote: ' + esc(v) + "</div>";
+    if (g.ok && !g.exact) extra = '<div class="sub">Accepted: "' + esc(v) + '". Close enough, but check the exact wording.</div>';
+    $("#fb").innerHTML = fbHTML(g.ok, it, extra) + nextRow();
+    $("#nextBtn").onclick = nextCard;
+    setTimeout(() => $("#nextBtn") && $("#nextBtn").focus({ preventScroll: true }), 0);
+  };
+  $("#ff").onsubmit = e => { e.preventDefault(); submit(false); };
+  $("#idk").onclick = () => submit(true);
+  keyHandler = e => { if (done && (e.key === "Enter" || e.key === "ArrowRight") && document.activeElement !== inp) { e.preventDefault(); nextCard(); } };
+}
+
+function renderMatch(){
+  const p = pool(); const chosen = []; const ex = new Set(); const answers = new Set();
+  while (chosen.length < 5) {
+    const it = pick(p, ex); if (!it) break; ex.add(it.id);
+    const n = norm(it.a); if (answers.has(n)) continue; answers.add(n); chosen.push(it);
+  }
+  if (!chosen.length) return renderEmpty();
+  if (chosen.length === 1) { lastId = chosen[0].id; return renderFill(chosen[0]); }
+  lastId = chosen[chosen.length - 1].id;
+  const right = shuffle(chosen);
+  $("#stage").innerHTML = '<div class="card"><div class="cardhead"><span>Matching · ' + chosen.length + ' pairs</span>' +
+    (S.topic !== "all" ? '<span class="pill' + (TOPIC[S.topic].w === "HEAVY" ? " heavy" : "") + '">' + esc(TOPIC[S.topic].name) + "</span>" : "") + "</div>" +
+    '<p class="hint" style="margin:0 0 14px">Click a prompt, then its answer. A wrong pairing counts as a miss for that prompt.</p>' +
+    '<div class="mgrid"><div class="mcol"><h4>Prompt</h4>' + chosen.map(it => '<button class="mi" data-l="' + it.id + '">' + esc(it.q) + "</button>").join("") + "</div>" +
+    '<div class="mcol"><h4>Answer</h4>' + right.map(it => '<button class="mi ans" data-r="' + it.id + '">' + esc(it.a) + "</button>").join("") + "</div></div>" +
+    '<div class="mfb" id="fb"></div></div>';
+  let selL = null, selR = null; const missed = new Set(); let left = chosen.length;
+  const clear = () => { $("#stage").querySelectorAll(".mi.sel").forEach(b => b.classList.remove("sel")); };
+  const tryPair = () => {
+    if (!selL || !selR) return;
+    const L = $('[data-l="' + selL + '"]'), R = $('[data-r="' + selR + '"]'); const it = BYID[selL];
+    const ok = norm(BYID[selR].a) === norm(it.a);
+    if (ok) {
+      if (!missed.has(selL)) record(selL, true);
+      [L, R].forEach(b => { b.classList.remove("sel"); b.classList.add("done"); if (missed.has(selL)) b.classList.add("missed"); b.disabled = true; });
+      left--;
+      $("#fb").innerHTML = '<div class="fb ok" role="status"><div class="verdict"><span class="mark">✓</span>' + (missed.has(selL) ? "Paired" : "Correct") + '</div><div class="ans">' + esc(it.q) + " → <b>" + esc(it.a) + '</b></div><div class="src">Source: ' + esc(SOURCES[it.s]) + "</div></div>";
+    } else {
+      if (!missed.has(selL)) { missed.add(selL); record(selL, false); }
+      [L, R].forEach(b => { b.classList.remove("sel"); b.classList.add("shake"); setTimeout(() => b.classList.remove("shake"), 350); });
+      $("#fb").innerHTML = '<div class="fb no" role="status"><div class="verdict"><span class="mark">✕</span>Not quite</div><div class="ans">' + esc(it.q) + "</div>" +
+        '<div class="ans">Correct answer: <b>' + esc(it.a) + '</b></div><div class="sub">You paired it with: ' + esc(BYID[selR].a) + '</div><div class="src">Source: ' + esc(SOURCES[it.s]) + "</div></div>";
+    }
+    selL = selR = null;
+    if (!left) {
+      const got = chosen.length - missed.size;
+      $("#fb").innerHTML += '<div class="nextrow"><span class="hint" style="margin:0">' + got + " of " + chosen.length + ' right first try · <kbd>Enter</kbd> for next round</span><button class="btn" id="nextBtn">Next round →</button></div>';
+      $("#nextBtn").onclick = renderMatch; $("#nextBtn").focus({ preventScroll: true });
+      keyHandler = e => { if (e.key === "Enter") { e.preventDefault(); renderMatch(); } };
+    }
+  };
+  $("#stage").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { if (b.disabled) return; $("#stage").querySelectorAll("[data-l].sel").forEach(x => x.classList.remove("sel")); selL = b.dataset.l; b.classList.add("sel"); tryPair(); });
+  $("#stage").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { if (b.disabled) return; $("#stage").querySelectorAll("[data-r].sel").forEach(x => x.classList.remove("sel")); selR = b.dataset.r; b.classList.add("sel"); tryPair(); });
+}
+
+/* ---------- side panel ---------- */
+function renderSide(){
+  const side = $("#side"); if (!side) return;
+  const weak = ITEMS.filter(it => S.items[it.id] && S.items[it.id].w > 0)
+    .sort((a, b) => S.items[b.id].w - S.items[a.id].w || S.items[a.id].lv - S.items[b.id].lv);
+  const active = weak.filter(it => status(it.id) !== "ret");
+  side.innerHTML =
+   '<div class="panel"><h3>Weak spots</h3><div class="sub">Items you have missed most. Retired ones drop out of the weak-spot drill.</div>' +
+    (weak.length ? '<ul class="weak">' + weak.slice(0, 15).map(it => '<li><span class="wn">' + S.items[it.id].w + "× missed</span>" +
+      '<div class="wq">' + esc(it.q.length > 110 ? it.q.slice(0, 108) + "…" : it.q) + '</div><div class="wa">' + esc(it.a) + (status(it.id) === "ret" ? ' <span style="color:var(--ok);font-weight:500">· retired</span>' : "") + "</div></li>").join("") + "</ul>" +
+      '<button class="btn" id="weakBtn"' + (active.length ? "" : " disabled") + ">Drill only these (" + active.length + ")</button>"
+     : '<div class="empty">Nothing missed yet. Misses will collect here.</div>') +
+   "</div>" +
+   '<div class="panel"><h3>By topic</h3><div class="sub">Weighting from the review. Heavy topics carry most of the marks.</div><table class="tbl">' +
+    TOPICS.map(t => { const list = ITEMS.filter(i => i.t === t.k); const c = counts(list);
+      return "<tr><td>" + esc(t.name) + (t.w === "HEAVY" ? '<span class="hv">HEAVY</span>' : "") + '<div class="mini">' +
+        LV.map(([k,, v]) => '<span style="width:' + (c[k] / list.length * 100) + "%;background:var(" + v + ')"></span>').join("") + "</div></td><td>" + c.ret + "/" + list.length + "</td></tr>"; }).join("") +
+   "</table></div>" +
+   '<div class="panel"><h3>Progress</h3><div class="sub">Saved in this browser. Clearing site data wipes it.</div><button class="btn small quiet danger" id="resetBtn">Reset all progress</button></div>';
+  const wb = $("#weakBtn"); if (wb) wb.onclick = () => { S.weak = true; if (S.fmt === "match" && active.length < 2) S.fmt = "mc"; save(); renderDrill(); };
+  $("#resetBtn").onclick = () => { if (confirm("Reset all drill and activity progress? This can't be undone.")) { S.items = {}; S.acts = {}; S.turn = 0; S.weak = false; save(); renderProgress(); route(); } };
+}
+
+/* ---------- activities ---------- */
+function renderActivity(a){
+  const st = S.acts[a.id] || {};
+  const headHTML = '<div class="acthead"><h2>' + esc(a.title) + '</h2><div class="sub">' + esc(a.sub) +
+    (st.best != null ? ' · <span class="best">Best ' + st.best + "/" + (a.qs ? a.qs.length : a.pairs.length) + "</span>" : "") + '</div><div class="note">' + esc(a.note) + "</div></div>";
+  $("#main").innerHTML = '<div style="max-width:780px">' + headHTML + '<div id="astage"></div></div>';
+  if (a.type === "match") return runMatchActivity(a);
+  runQuiz(a);
+}
+function runQuiz(a){
+  const order = a.qs.map((_, i) => i); let i = 0; const res = [];
+  const show = () => {
+    if (i >= order.length) return finish();
+    const q = a.qs[order[i]]; const perm = shuffle(q.o.map((_, k) => k));
+    $("#astage").innerHTML = '<div class="card"><div class="qcount"><span>Question ' + (i + 1) + " of " + order.length + "</span><span>" + res.filter(Boolean).length + ' correct</span></div>' +
+      '<div class="qbar"><span style="width:' + (i / order.length * 100) + '%"></span></div>' +
+      '<p class="prompt">' + esc(q.q) + '</p><div class="opts">' + perm.map((k, j) => '<button class="opt" data-j="' + j + '"><span class="k">' + (j + 1) + "</span><span>" + esc(q.o[k]) + "</span></button>").join("") + "</div>" +
+      '<p class="hint">Press <kbd>1</kbd>–<kbd>' + perm.length + '</kbd> to answer.</p><div id="fb"></div></div>';
+    let done = false;
+    const choose = j => {
+      if (done || j < 0 || j >= perm.length) return; done = true;
+      const ok = perm[j] === q.c; res.push(ok);
+      $("#astage").querySelectorAll(".opt").forEach((b, jj) => { b.disabled = true;
+        if (perm[jj] === q.c) b.classList.add("right"); else if (jj === j) b.classList.add("wrong"); else b.classList.add("dim"); });
+      $("#fb").innerHTML = '<div class="fb ' + (ok ? "ok" : "no") + '" role="status"><div class="verdict"><span class="mark">' + (ok ? "✓" : "✕") + "</span>" + (ok ? "Correct" : "Not quite") + "</div>" +
+        (ok ? "" : '<div class="ans">Correct answer: <b>' + esc(q.o[q.c]) + "</b></div>") + '<div class="why">' + esc(q.why) + "</div></div>" +
+        '<div class="nextrow"><span class="hint" style="margin:0"><kbd>Enter</kbd> for next</span><button class="btn" id="nextBtn">' + (i + 1 < order.length ? "Next →" : "See results") + "</button></div>";
+      $("#nextBtn").onclick = () => { i++; show(); }; $("#nextBtn").focus({ preventScroll: true });
+    };
+    $("#astage").querySelectorAll(".opt").forEach(b => b.onclick = () => choose(+b.dataset.j));
+    keyHandler = e => {
+      if (!done && /^[1-9]$/.test(e.key)) { e.preventDefault(); choose(+e.key - 1); }
+      else if (done && (e.key === "Enter" || e.key === "ArrowRight")) { e.preventDefault(); i++; show(); }
+    };
+  };
+  const finish = () => {
+    const score = res.filter(Boolean).length; const st = S.acts[a.id] || {};
+    st.last = score; st.best = Math.max(st.best || 0, score); S.acts[a.id] = st; save();
+    keyHandler = null;
+    $("#astage").innerHTML = '<div class="card"><p class="score">' + score + " / " + order.length + '</p><p class="hint" style="margin-top:4px">Best so far: ' + st.best + " / " + order.length + "</p>" +
+      '<ul class="review">' + order.map((k, n) => { const q = a.qs[k]; return '<li class="' + (res[n] ? "" : "miss") + '"><div class="rq">' + (res[n] ? "✓ " : "✕ ") + esc(q.q) + '</div><div class="ra">' + esc(q.o[q.c]) + "</div></li>"; }).join("") + "</ul>" +
+      '<div class="nextrow"><button class="btn" id="again">Retake</button></div></div>';
+    $("#again").onclick = () => renderActivity(a);
+  };
+  show();
+}
+function runMatchActivity(a){
+  const L = a.pairs.map((p, i) => ({ i, l: p[0] })); const R = shuffle(a.pairs.map((p, i) => ({ i, r: p[1] })));
+  $("#astage").innerHTML = '<div class="card"><p class="hint" style="margin:0 0 14px">Click a term on the left, then its match on the right.</p>' +
+    '<div class="mgrid"><div class="mcol"><h4>Term</h4>' + L.map(x => '<button class="mi" data-l="' + x.i + '">' + esc(x.l) + "</button>").join("") + "</div>" +
+    '<div class="mcol"><h4>Match</h4>' + R.map(x => '<button class="mi ans" data-r="' + x.i + '">' + esc(x.r) + "</button>").join("") + "</div></div><div id=\"fb\" class=\"mfb\"></div></div>";
+  let sl = null, sr = null; const missed = new Set(); let left = a.pairs.length;
+  const tryPair = () => {
+    if (sl == null || sr == null) return; const p = a.pairs[sl];
+    const Lb = $('[data-l="' + sl + '"]'), Rb = $('[data-r="' + sr + '"]');
+    if (sl === sr) {
+      [Lb, Rb].forEach(b => { b.classList.remove("sel"); b.classList.add("done"); if (missed.has(sl)) b.classList.add("missed"); b.disabled = true; });
+      left--;
+      $("#fb").innerHTML = '<div class="fb ok"><div class="verdict"><span class="mark">✓</span>' + (missed.has(sl) ? "Paired" : "Correct") + '</div><div class="ans">' + esc(p[0]) + " → <b>" + esc(p[1]) + '</b></div><div class="why">' + esc(p[2]) + "</div></div>";
+    } else {
+      missed.add(sl);
+      [Lb, Rb].forEach(b => { b.classList.remove("sel"); b.classList.add("shake"); setTimeout(() => b.classList.remove("shake"), 350); });
+      $("#fb").innerHTML = '<div class="fb no"><div class="verdict"><span class="mark">✕</span>Not quite</div><div class="ans">' + esc(p[0]) + " → correct match: <b>" + esc(p[1]) + '</b></div><div class="sub">You picked: ' + esc(a.pairs[sr][1]) + '</div><div class="why">' + esc(p[2]) + "</div></div>";
+    }
+    sl = sr = null;
+    if (!left) {
+      const score = a.pairs.length - missed.size; const st = S.acts[a.id] || {}; st.last = score; st.best = Math.max(st.best || 0, score); S.acts[a.id] = st; save();
+      $("#fb").innerHTML += '<div class="card" style="margin-top:16px"><p class="score">' + score + " / " + a.pairs.length + '</p><p class="hint">Right on the first try. Best so far: ' + st.best + '</p><ul class="review">' +
+        a.pairs.map((p, i) => '<li class="' + (missed.has(i) ? "miss" : "") + '"><div class="ra">' + esc(p[0]) + " → " + esc(p[1]) + '</div><div class="rw">' + esc(p[2]) + "</div></li>").join("") +
+        '</ul><div class="nextrow"><button class="btn" id="again">Retake</button></div></div>';
+      $("#again").onclick = () => renderActivity(a);
+    }
+  };
+  $("#astage").querySelectorAll("[data-l]").forEach(b => b.onclick = () => { if (b.disabled) return; $("#astage").querySelectorAll("[data-l].sel").forEach(x => x.classList.remove("sel")); sl = +b.dataset.l; b.classList.add("sel"); tryPair(); });
+  $("#astage").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { if (b.disabled) return; $("#astage").querySelectorAll("[data-r].sel").forEach(x => x.classList.remove("sel")); sr = +b.dataset.r; b.classList.add("sel"); tryPair(); });
+}
+
+/* ---------- notes ---------- */
+function renderNotes(){
+  const bySrc = {}; ITEMS.forEach(it => bySrc[it.s] = (bySrc[it.s] || 0) + 1);
+  const actBySrc = {}; ACTIVITIES.forEach(a => actBySrc[a.src] = (actBySrc[a.src] || []).concat(a.title));
+  const list = arr => "<ul>" + arr.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
+  const revCount = ITEMS.filter(i => i.r).length;
+  $("#main").innerHTML = '<div class="notes" style="max-width:820px"><h2>About this deck</h2>' +
+    '<p class="hint" style="font-size:.92rem">' + ITEMS.length + " drill items, " + revCount + " of them straight from the Midterm Review (tagged 'On review sheet'). New items come up in this order: review-sheet facts from HEAVY topics first, then other review facts, then everything else. Every item cites the document it came from.</p>" +
+    '<section><h3>Where the questions came from</h3><table class="srcs"><thead><tr><th>Document</th><th>Quiz tabs</th><th>Drill items</th></tr></thead><tbody>' +
+      Object.keys(SOURCES).map(k => "<tr><td>" + esc(SOURCES[k]) + "</td><td>" + esc((actBySrc[k] || []).join(", ") || "—") + "</td><td>" + (bySrc[k] || 0) + "</td></tr>").join("") +
+      "<tr><td>OLAP-doc.pdf (second copy)</td><td>—</td><td>Identical file; used once</td></tr></tbody></table></section>" +
+    "<section><h3>Missing from your materials</h3>" + list(NOTES.missing) + "</section>" +
+    "<section><h3>Named but never defined</h3>" + list(NOTES.undefined) + "</section>" +
+    "<section><h3>Places your documents disagree</h3>" + list(NOTES.conflicts) + "</section>" +
+    "<section><h3>Left out on purpose</h3>" + list(NOTES.skipped) + "</section></div>";
+}
+
+/* ---------- boot ---------- */
+applyTheme(); renderMeta(); renderProgress(); renderTabs(); route();
+})();
+
+</script>
+</body>
+</html>
