@@ -113,6 +113,9 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:8px;
 .opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
 .opt.wrong .k{background:var(--bad);color:var(--surface)}
 .opt.dim{opacity:.55}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .k{background:var(--accent);color:var(--accent-ink)}
+.opt.missedbox{border-style:dashed}
 .fillrow{display:flex;gap:10px}
 .fillrow input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:12px 14px;font-size:1.05rem}
 .fillrow input:focus{border-color:var(--accent);outline:none}
@@ -227,7 +230,8 @@ aside h3,.panel h3{font-family:var(--serif);font-size:1.08rem;margin:0 0 4px}
 <script>
 /* ===== SOURCES ===== */
 const SOURCES = {
-  REV:  "Midterm Exam Review (F26)",
+  REV:  "Midterm Exam Review (latest)",
+  REV0: "Earlier Midterm Review (Sept.)",
   CH1:  "WK1 Reading: BI Chapter 1 (Sharda)",
   WK1:  "WK1 Intro to BI slides",
   WK2:  "WK2 From Data to Decisions slides",
@@ -244,18 +248,29 @@ const SOURCES = {
   DISC: "Your BI Concepts discussion"
 };
 
-/* ===== TOPICS (from the Midterm Review, section 2) ===== */
+/* ===== TOPICS (chapters of the latest Midterm Review; about 60% of the exam is DW + Data Mart + ETL) ===== */
 const TOPICS = [
-  { k: "bi",   name: "Intro to Business Intelligence", wk: "Weeks 1–2", w: "Medium" },
-  { k: "dw",   name: "Data Warehouse",                 wk: "Week 3",    w: "HEAVY" },
-  { k: "dm",   name: "Data Mart",                      wk: "Week 4",    w: "HEAVY" },
-  { k: "olap", name: "OLAP and the Cube",              wk: "Weeks 1, 3", w: "Medium" },
-  { k: "etl",  name: "Data Integration and ETL",       wk: "Weeks 5–6", w: "HEAVY" },
-  { k: "alx",  name: "Alteryx",                        wk: "Weeks 5–6", w: "Medium" }
+  { k: "bi",   name: "Intro to Business Intelligence", wk: "Ch. 1", w: "Medium" },
+  { k: "dw",   name: "Data Warehouse",                 wk: "Ch. 2", w: "HEAVY" },
+  { k: "dm",   name: "Data Mart",                      wk: "Ch. 3", w: "HEAVY" },
+  { k: "olap", name: "OLAP and the Cube",              wk: "Ch. 4", w: "Medium" },
+  { k: "etl",  name: "Data Integration and ETL",       wk: "Ch. 5", w: "HEAVY" },
+  { k: "alx",  name: "Alteryx",                        wk: "Ch. 6", w: "Medium" }
 ];
 
 /* Extra plausible distractors per group — every string here appears in your documents. */
 const EXTRAS = {
+  "bi-strat":  ["Operational", "Transactional"],
+  "dw-subj":   ["A nightly batch job", "An order-entry screen", "A login table"],
+  "dw-price":  ["Query speed", "Data integrity"],
+  "dw-codd":   ["Data marts", "Dimensional modeling"],
+  "dw-rdbms":  ["Multidimensional databases (MDBMS)", "Data lakes", "NoSQL databases"],
+  "dm-speed":  ["Consistency", "An enterprise-wide view", "Lower redundancy"],
+  "dm-gov":    ["Delete one of the marts", "Let each department keep its own rule", "Load the marts at different times of day"],
+  "olap-cube2":["Hypercube", "Star schema", "Fact table"],
+  "olap-norm": ["Denormalization", "Aggregation", "Indexing"],
+  "etl-why":   ["One department", "A data mart"],
+  "alx-prep":  ["Visualization", "Machine learning"],
   "bi-tools":  ["Tableau", "MicroStrategy"],
   "bi-mine":   ["Outlier detection", "Tracking patterns"],
   "bi-style":  ["Report delivery and alerting", "Statistics and data mining"],
@@ -306,13 +321,21 @@ const EXTRAS = {
 /* ===== DRILL ITEMS =====
    Row: [question, answer, {alt, kw, x}]   r = 1 means the fact is on the Midterm Review sheet. */
 const BLOCKS = [
-/* ---------------- INTRO TO BI ---------------- */
+/* ======== FROM THE LATEST MIDTERM REVIEW (r = 1) ======== */
+/* ---- Ch 1: Intro to BI ---- */
 ["bi","bi-process","REV",1,[
  ["BI process, step 1: pull data out of the operational systems that record the business (sales, HR, finance, web).","Collect"],
  ["BI process step: combine the sources into one consistent set. The review calls this the ETL step.","Integrate",{alt:["integration"]}],
  ["BI process step: hold the data in a data warehouse, organised for analysis rather than for recording transactions.","Store",{alt:["storage"]}],
  ["BI process step: query, aggregate and mine the data (OLAP, reporting, data mining).","Analyse",{alt:["analyze","analysis"]}],
- ["BI process, last step: dashboards, scorecards and reports that a decision maker actually reads.","Present",{alt:["presentation"]}]
+ ["BI process, last step: dashboards, scorecards and reports that a decision maker actually reads.","Present",{alt:["presentation"]}],
+ ["BI process: which step comes directly after Integrate?","Store",{alt:["storage"]}]
+]],
+["bi","bi-chain","REV",1,[
+ ["The BI chain: data becomes information, information supports decisions, and decisions lead to ___.","Action",{alt:["actions"]}]
+]],
+["bi","bi-strat","REV",1,[
+ ["BI tools focus on the ___ and tactical use of information.","Strategic",{alt:["strategy"]}]
 ]],
 ["bi","bi-arch","REV",1,[
  ["BI architecture component: the operational systems. Also called source or operational systems.","Data sources",{alt:["source systems","operational systems"]}],
@@ -321,11 +344,17 @@ const BLOCKS = [
  ["BI architecture component: dashboards, scorecards, ad-hoc reports.","Presentation",{alt:["presentation layer"]}],
  ["BI architecture component: data about the data. Where it came from, what it means, how it was transformed.","Metadata"]
 ]],
+["bi","bi-pq","REV",1,[
+ ["Practice-quiz architecture: optimised for decision support; usually a data warehouse or a data mart.","Data store"],
+ ["Practice-quiz architecture: move and prepare the data.","ETL tools",{alt:["etl"]}],
+ ["Practice-quiz architecture: provide advanced statistical analysis to uncover problems and opportunities hidden in business data.","Data mining tools",{alt:["data mining"]}],
+ ["Practice-quiz architecture: in charge of presenting data to the end user in a variety of ways.","Data visualization tools",{alt:["data visualization","visualization tools"]}]
+]],
 ["bi","bi-grew","REV",1,[
  ["Why BI grew: this rose faster than anyone could handle by hand.","Data volume and variety",{kw:[["volume","variety"]]}],
- ["Why BI grew: this got cheap enough to keep history rather than discard it.","Storage and compute",{kw:[["storage","compute"]]}],
+ ["Why BI grew: this got cheap enough that companies could keep years of history instead of throwing it away.","Cheaper storage and computing",{alt:["storage and compute"],kw:[["storage","comput"]]}],
  ["Why BI grew: decisions had to be made faster and with evidence.","Competitive pressure",{kw:[["competit"]]}],
- ["Why BI grew: these matured, so analysts stopped needing a developer for every question.","Tools",{alt:["tools matured","bi tools"]}]
+ ["Why BI grew: these matured, so analysts stopped needing a developer for every question.","Tools",{alt:["tools matured","bi tools","mature tools"]}]
 ]],
 ["bi","bi-tools","REV",1,[
  ["Microsoft's BI tool on the review's 'tools you should be able to name' list.","Power BI",{alt:["microsoft power bi","powerbi"]}],
@@ -334,11 +363,364 @@ const BLOCKS = [
  ["Qlik's BI products on the review's list.","Qlik Sense / QlikView",{alt:["qlik sense","qlikview","qlik"]}]
 ]],
 ["bi","bi-mine","REV",1,[
- ["Data mining family: put each row into one of a set of known categories. 'Will this customer churn, yes or no?'","Classification"],
+ ["Data mining family: puts each record into one of a set of categories you already know, e.g., whether each customer will churn, yes or no.","Classification"],
  ["Data mining family: find natural groupings when you do NOT know the categories in advance.","Clustering"],
- ["Data mining family: predict a continuous number. 'What will revenue be next quarter?'","Regression"],
- ["Data mining family: find things that occur together. Market basket analysis (bread and butter).","Association"]
+ ["Data mining family: predicts a continuous number, such as next quarter's revenue in dollars.","Regression"],
+ ["Data mining family: find things that occur together. Market basket analysis (bread and butter).","Association"],
+ ["Grouping customers by behaviour without deciding the groups first.","Clustering"]
 ]],
+
+/* ---- Ch 2: Data Warehouse ---- */
+["dw","dw-comp","REV",1,[
+ ["A central repository of integrated, historical data from many sources, structured for analysis.","Data warehouse",{alt:["dw"]}],
+ ["Staging for recent operational data on its way in. Current, not historical.","ODS",{alt:["operational data store"]}],
+ ["The central integrated store serving the whole organisation.","EDW",{alt:["enterprise data warehouse"]}],
+ ["A subset aimed at one department or subject area.","Data mart"],
+ ["The description of the data's structure, meaning, origin and transformation rules.","Metadata"],
+ ["Data typically waits briefly here before being loaded into the EDW.","ODS",{alt:["operational data store"]}]
+]],
+["dw","dw-char","REV",1,[
+ ["Organised around business subjects (customer, product, sales), not around the programs that captured the data.","Subject-oriented",{alt:["subject oriented"]}],
+ ["One standard for names, codes, units and formats, no matter which source a row came from.","Integrated"],
+ ["Every row is tied to a point in time, so the warehouse holds a HISTORY rather than only today's values.","Time-variant",{alt:["time variant"]}],
+ ["Data is loaded and then read. It is not updated or deleted the way an operational row is.","Nonvolatile",{alt:["non-volatile"]}],
+ ["The defining characteristic the review says students most often forget.","Time-variant",{alt:["time variant"]}],
+ ["Follows from the four: data is also held pre-aggregated so analytical queries do not have to scan the detail every time.","Summarized",{alt:["summarised"]}],
+ ["Follows from the four: deliberately built as star or snowflake schemas, because query speed matters more than avoiding redundant data.","Denormalized",{alt:["denormalised","not normalized","not normalised"]}],
+ ["Sales codes the state as TX, HR stores Texas, finance uses 48. The warehouse holds one standard code.","Integrated"],
+ ["One customer is 1001 in the CRM and C-1001 in billing; the warehouse settles on one form.","Integrated"],
+ ["An order goes from shipped to delivered: the warehouse loads a new time-stamped row and leaves the earlier row alone.","Time-variant",{alt:["time variant"]}],
+ ["Lets an analyst compare this quarter with the same quarter three years ago, even though the CRM keeps only the current address.","Time-variant",{alt:["time variant"]}],
+ ["An analyst spots a typo in a warehouse row. They don't edit it; the correction arrives with the next ETL load.","Nonvolatile",{alt:["non-volatile"]}],
+ ["Because the data cannot change under the analyst, the same query gives the same result tomorrow.","Nonvolatile",{alt:["non-volatile"]}]
+]],
+["dw","dw-subj","REV",1,[
+ ["Which of these is a subject area: a nightly batch job, an order-entry screen, a login table, or product?","Product"]
+]],
+["dw","dw-price","REV",1,[
+ ["The price of denormalizing: you give up ___ because some data is repeated.","Storage efficiency",{kw:[["storage"]]}]
+]],
+["dw","dw-meta2","REV",1,[
+ ["'The Revenue column is in US dollars, summed from ERP order lines.'","Metadata"],
+ ["The revenue value of $4,500 for March.","Data"],
+ ["A customer's address stored in the warehouse.","Data"]
+]],
+["dw","dw-people","REV",1,[
+ ["Whose twelve rules define what makes a data warehouse (per the review)?","Bill Inmon",{alt:["inmon"]}]
+]],
+["dw","dw-codd","REV",1,[
+ ["The review says E. F. Codd's twelve rules are about ___, not data warehouses.","Relational databases",{alt:["relational database"]}]
+]],
+["dw","dw-orient","REV",1,[
+ ["Twelve-rule themes to know: data integration, nonvolatility, consistency, time-variance, and a ___ rather than process orientation.","Business"]
+]],
+["dw","dw-acr","REV",1,[
+ ["ODS stands for ___.","Operational Data Store"],
+ ["EDW stands for ___.","Enterprise Data Warehouse"]
+]],
+["dw","dw-arch","REV",1,[
+ ["Architecture: client → database. Simple, can be faster; poor scalability, logic lives in the client.","Two-tier",{alt:["2-tier","two tier"]}],
+ ["Architecture: client → business logic → database. Scalable, separates concerns; more complex and costly.","Three-tier",{alt:["3-tier","three tier"]}],
+ ["Architecture: browser → web/app server → database. Reachable anywhere, nothing to install; depends on the network, security surface.","Web-based",{alt:["web based","web"]}]
+]],
+["dw","dw-ik","REV",1,[
+ ["Top-down direction.","Inmon",{alt:["bill inmon"]}],
+ ["Bottom-up direction.","Kimball",{alt:["ralph kimball"]}],
+ ["Builds the enterprise data warehouse first.","Inmon",{alt:["bill inmon"]}],
+ ["Builds data marts first.","Kimball",{alt:["ralph kimball"]}],
+ ["Modelling: normalized (3NF) at the warehouse.","Inmon",{alt:["bill inmon"]}],
+ ["Modelling: dimensional star schemas.","Kimball",{alt:["ralph kimball"]}],
+ ["Marts are dependent, derived from the EDW.","Inmon",{alt:["bill inmon"]}],
+ ["Lets the warehouse grow as more data marts are added.","Kimball",{alt:["ralph kimball"]}],
+ ["Strength: one consistent enterprise view.","Inmon",{alt:["bill inmon"]}],
+ ["Strength: delivers business value quickly.","Kimball",{alt:["ralph kimball"]}],
+ ["Cost: slow and expensive to start.","Inmon",{alt:["bill inmon"]}],
+ ["Risk: marts drift apart unless they share the same dimensions (one common Customer and Product).","Kimball",{alt:["ralph kimball"]}],
+ ["A bank whose priority is one consistent enterprise view, and which accepts a long and costly build.","Inmon",{alt:["bill inmon"]}],
+ ["A company that wants a working sales analysis within three months and plans to add other departments later.","Kimball",{alt:["ralph kimball"]}]
+]],
+["dw","dw-platform","REV",1,[
+ ["Amazon's cloud warehouse on the review list.","Redshift",{alt:["amazon redshift"]}],
+ ["Google's cloud warehouse on the review list.","BigQuery",{alt:["google bigquery","big query"]}],
+ ["IBM's warehouse on the review list.","Netezza",{alt:["ibm netezza"]}],
+ ["Oracle's warehouse on the review list.","Exadata",{alt:["oracle exadata"]}],
+ ["Cloud warehouse on the review list that shares its name with a schema type.","Snowflake"]
+]],
+["dw","dw-rdbms","REV",1,[
+ ["Most data warehouses are built on these.","Relational database management systems",{alt:["rdbms","relational databases","relational dbms"]}]
+]],
+["dw","dw-kind","REV",1,[
+ ["A warehouse that is run and scaled by a third party, so you pay for use instead of buying hardware.","Hosted or cloud warehouse",{alt:["hosted","cloud","cloud warehouse","hosted warehouse","hosted data warehouse"],kw:[["hosted","cloud"]]}]
+]],
+["dw","dw-opdw","REV",1,[
+ ["Records transactions; holds current values that are updated in place.","Operational database",{alt:["operational"]}],
+ ["Analyses those transactions; holds several years of integrated history.","Data warehouse"]
+]],
+
+/* ---- Ch 3: Data Mart ---- */
+["dm","dm-def","REV",1,[
+ ["A subset of warehouse data aimed at one department, subject area or user group.","Data mart"],
+ ["A company new to data warehousing wants to prove the value before committing to a full warehouse. What should it build first?","Data mart",{alt:["a data mart for one department"]}]
+]],
+["dm","dm-fewer","REV",1,[
+ ["Compared with the warehouse, a mart has a narrower scope, less data and fewer ___.","Users",{alt:["sources"]}]
+]],
+["dm","dm-test","REV",1,[
+ ["A data mart can serve as a ___ for a company exploring the benefits of data warehousing.","Test vehicle"]
+]],
+["dm","dm-why","REV",1,[
+ ["Why marts exist: one business unit gets a data set built for its needs.","Tailored data",{alt:["tailored data set"],kw:[["tailor"]]}],
+ ["Why marts exist: less data, tuned for the queries that group actually runs.","Better performance",{kw:[["perform"]]}],
+ ["Why marts exist: analysts find exactly the tables they need, already shaped the way their department thinks.","Easier access",{kw:[["access"]]}],
+ ["Why marts exist: you can limit sensitive data to the group entitled to see it.","Security"],
+ ["Queries that took minutes against the warehouse finish in seconds against the mart.","Better performance",{kw:[["perform"]]}],
+ ["Payroll data is limited to the group entitled to see it.","Security"]
+]],
+["dm","dm-type","REV",1,[
+ ["Drawn from the enterprise data warehouse. Inherits the EDW's model and definitions.","Dependent"],
+ ["Built straight from source systems, without an EDW in between.","Independent"],
+ ["Both: some data from the EDW, some from source systems.","Hybrid"],
+ ["Requires the warehouse to exist first.","Dependent"],
+ ["Can be built where no warehouse exists.","Independent"],
+ ["A regional sales mart loaded only from the warehouse.","Dependent"],
+ ["Marketing builds its own mart from the CRM and web logs in three weeks for one campaign.","Independent"],
+ ["Use case: an EDW exists, but the department also needs data it does not yet carry.","Hybrid"],
+ ["A university's Admissions and Financial Aid marts, both loaded from the warehouse, agree on what a student is.","Dependent"],
+ ["A finance mart takes ledger data from the warehouse and exchange rates straight from a market-data feed.","Hybrid"],
+ ["An HR mart takes employee records from the warehouse and survey results straight from the survey vendor.","Hybrid"]
+]],
+["dm","dm-speed","REV",1,[
+ ["The main advantage of an independent mart.","Speed",{alt:["faster","fast"]}]
+]],
+["dm","dm-num","REV",1,[
+ ["The midterm review lists this many data mart types.","3",{alt:["three"]}]
+]],
+["dm","dm-dis","REV",1,[
+ ["Data mart disadvantage: the same data stored in several places.","Redundant storage",{kw:[["redundan"]]}],
+ ["Data mart disadvantage if the marts are not properly governed.","Inconsistency",{kw:[["inconsisten"]]}],
+ ["Data mart disadvantage if the marts are not integrated.","Siloed data, no enterprise-wide view",{kw:[["silo","enterprise"]]}],
+ ["The CFO gets three different revenue totals for the same month.","Inconsistency",{kw:[["inconsisten"]]}],
+ ["Nobody can answer a question that spans sales and service.","Siloed data, no enterprise-wide view",{kw:[["silo","enterprise"]]}]
+]],
+["dm","dm-adv","REV",1,[
+ ["Data mart advantage (review): ___ for a specific group.","Faster queries",{kw:[["fast"]]}]
+]],
+["dm","dm-gov","REV",1,[
+ ["The fix for marts that report different figures (e.g., two definitions of 'active customer').","Central governance of shared data definitions",{kw:[["governance","shared definition","one definition","one shared"]]}]
+]],
+["dm","olap-schema","REV",1,[
+ ["Data marts are usually modelled as dimensional ___ schemas, the same design used in the warehouse.","Star",{alt:["star schema"]}]
+]],
+["dm","dm-vs","REV",1,[
+ ["Enterprise-wide, integrated, all subjects, serves the whole organisation.","Data warehouse"],
+ ["One subject area or department, a subset, serves one group.","Data mart"]
+]],
+
+/* ---- Ch 4: OLAP ---- */
+["olap","olap-fd","REV",1,[
+ ["The numbers you want to analyse: sales revenue, quantity sold, profit margin.","Fact / measure",{alt:["fact","measure","facts","measures"]}],
+ ["The descriptive attributes you slice them by: time, geography, product.","Dimension",{alt:["dimensions"]}],
+ ["Central table holding the measures plus foreign keys to each dimension.","Fact table"],
+ ["Surrounding table holding the descriptive attributes.","Dimension table"],
+ ["Qualifying characteristics that describe a fact from different angles; used to search, filter and classify the facts.","Attributes",{alt:["attribute"]}],
+]],
+["olap","olap-dm","REV",1,[
+ ["Product category is a ___.","Dimension",{alt:["dimensions"]}],
+ ["Sales revenue is a ___.","Measure",{alt:["fact","measures","facts","fact / measure"]}]
+]],
+["olap","olap-schema","REV",1,[
+ ["Dimensions denormalized: one table per dimension.","Star",{alt:["star schema"]}],
+ ["Dimensions normalized into several related tables.","Snowflake",{alt:["snowflake schema"]}],
+ ["One hop from fact to dimension.","Star",{alt:["star schema"]}],
+ ["Several hops; slower because of more joins.","Snowflake",{alt:["snowflake schema"]}],
+ ["Some redundancy; relies on the ETL to keep it clean.","Star",{alt:["star schema"]}],
+ ["Less redundancy; integrity better enforced by the model.","Snowflake",{alt:["snowflake schema"]}],
+ ["A type of star schema in which dimension tables can have their own dimension tables.","Snowflake",{alt:["snowflake schema"]}],
+ ["Designed to optimise query operations rather than update operations.","Star",{alt:["star schema"]}]
+]],
+["olap","olap-ops","REV",1,[
+ ["Aggregate up a hierarchy: day to month to year.","Roll-up",{alt:["rollup","roll up","drill-up","drill up"]}],
+ ["The opposite of roll-up: move to a lower level of detail.","Drill-down",{alt:["drill down","drilldown"]}],
+ ["Fix ONE dimension and look at the rest, such as only the year 2026 across all products and regions.","Slice"],
+ ["Fix SEVERAL dimensions at once, such as 2026, Texas and laptops together.","Dice"],
+ ["Rotate the cube to put a different dimension on the axis.","Pivot"],
+ ["Opening one month to see its daily sales.","Drill-down",{alt:["drill down","drilldown"]}],
+ ["Moving region from the columns to the rows.","Pivot"]
+]],
+["olap","olap-srv","REV",1,[
+ ["Data sits in a relational database. Flexible, scales to big data, slower to answer.","ROLAP"],
+ ["Data sits in a multidimensional store (a real cube). Very fast, but the cube must be built and sized in advance.","MOLAP"],
+ ["Summaries in the cube, detail left relational. Some of the speed, some of the flexibility.","HOLAP"],
+ ["The engine underneath MOLAP.","MDBMS",{alt:["multidimensional database management system"]}]
+]],
+["olap","olap-acr","REV",1,[
+ ["MDBMS stands for ___.","Multidimensional Database Management System",{alt:["multi-dimensional database management system"]}]
+]],
+["olap","olap-cube2","REV",1,[
+ ["MDBMS users picture the stored data as a three-dimensional cube known as a ___.","Data cube",{alt:["cube"]}]
+]],
+["olap","olap-norm","REV",1,[
+ ["Reliance on ___ as the design method for relational databases is seen as a stumbling block to their use in OLAP.","Normalization",{alt:["normalisation"]}]
+]],
+["olap","olap-vs","REV",1,[
+ ["Purpose: record transactions.","OLTP"],
+ ["Purpose: analyse transactions.","OLAP"],
+ ["Typical operation: insert, update, small reads.","OLTP"],
+ ["Typical operation: large aggregating reads.","OLAP"],
+ ["Data age: historical.","OLAP"],
+ ["Data age: current.","OLTP"],
+ ["Design: normalized.","OLTP"],
+ ["Design: denormalized, dimensional.","OLAP"],
+ ["Users: fewer; analysts and managers.","OLAP"],
+ ["Users: many; operational staff.","OLTP"]
+]],
+
+/* ---- Ch 5: Data Integration and ETL ---- */
+["etl","etl-why","REV",1,[
+ ["Data integration is needed precisely because companies do not keep everything in ___.","One system",{kw:[["system"]]}]
+]],
+["etl","etl-tech","REV",1,[
+ ["Integration technique: everything is pulled into one store. One copy; as fresh as the last load.","Consolidation (ETL)",{alt:["consolidation","etl"]}],
+ ["Integration technique: a virtual view queries the sources on demand. No copy; live.","Federation (EII)",{alt:["federation","data federation","eii"]}],
+ ["Integration technique: changes are pushed between systems. Several copies; near real time.","Propagation (EAI / EDR)",{alt:["propagation","data propagation","eai","edr"]}],
+ ["Which integration technique gives LIVE data without copying it?","Federation (EII)",{alt:["federation","data federation","eii"]}],
+ ["Loading a data warehouse each night from several sources.","Consolidation (ETL)",{alt:["consolidation","etl"]}],
+ ["A dashboard reads the CRM and the ERP live through one virtual view.","Federation (EII)",{alt:["federation","data federation","eii"]}],
+ ["An order's change reaches the warehouse and the CRM within seconds.","Propagation (EAI / EDR)",{alt:["propagation","data propagation","eai","edr"]}],
+ ["Drawback: every query reaches back into the source systems.","Federation (EII)",{alt:["federation","data federation","eii"]}],
+ ["Drawback: all the copies must be kept in step.","Propagation (EAI / EDR)",{alt:["propagation","data propagation","eai","edr"]}]
+]],
+["etl","etl-fresh","REV",1,[
+ ["Freshness of propagation.","Near real time",{alt:["near real-time","near-real-time"]}],
+ ["Freshness of consolidation.","As fresh as the last load",{kw:[["last load"]]}],
+ ["Freshness of federation.","Live"]
+]],
+["etl","etl-copy","REV",1,[
+ ["Is the data copied under propagation?","Yes, several copies",{kw:[["several","many"]]}],
+ ["Is the data copied under consolidation?","Yes, one copy",{kw:[["one"]]}],
+ ["Is the data copied under federation?","No",{alt:["no copy","none","nothing"]}]
+]],
+["etl","etl-design","REV",1,[
+ ["ETL design, always the first task.","Understand the business requirement and source systems",{kw:[["understand","requirement"]]}],
+ ["ETL design, step 2.","Design the target model and schema",{kw:[["target","schema","model"]]}],
+ ["ETL design, step 3: every target field back to a source field.","Map",{alt:["mapping"]}],
+ ["ETL design, step 4: write down the transformation and cleansing rules.","Document",{alt:["documentation"]}],
+ ["ETL design, last step: decide which job runs and in what order.","Plan the process flow",{kw:[["process flow","plan"]]}]
+]],
+["etl","etl-steps","REV",1,[
+ ["ETL step: get the data out of the source. Fixes: the data is locked inside operational systems.","Capture / Extract",{alt:["capture","extract","extraction"]}],
+ ["ETL step: correct errors and inconsistencies. Misspellings, TX vs Texas vs Tex, missing values, wrong field used.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing","cleaning"]}],
+ ["ETL step: reshape to the warehouse model. Fixes: source structure does not match the target.","Transform",{alt:["transformation"]}],
+ ["ETL step: write it and make it fast to read. Fixes: raw loaded data is slow to query.","Load / Index",{alt:["load","index","load and index"]}],
+ ["The ETL stage where anomalies are detected and corrected.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing","cleaning"]}],
+ ["The ETL step that comes immediately after cleanse.","Transform",{alt:["transformation"]}],
+ ["The ETL step that is always last.","Load / Index",{alt:["load","index","load and index"]}],
+ ["Splitting a full name into first and last name, or rolling order lines up to daily totals.","Transform",{alt:["transformation"]}]
+]],
+["etl","etl-ext","REV",1,[
+ ["A snapshot of everything, at a point in time. Used for the initial load.","Static extract",{alt:["static"]}],
+ ["Only what changed since the last run. Used for every load after the first.","Incremental extract",{alt:["incremental"]}],
+ ["Each run handles far less data because it moves only the changes.","Incremental extract",{alt:["incremental"]}]
+]],
+["etl","etl-marker","REV",1,[
+ ["Incremental extract needs a reliable change marker: a timestamp, a log or a ___.","Flag"]
+]],
+["etl","etl-status","REV",1,[
+ ["Data status: Extracted → Transformed → Loaded, with ___ for rows that fail validation or a transformation rule.","Rejected"],
+ ["Data status: pulled from the source but not yet reshaped.","Extracted"],
+ ["Data status: reshaped to the warehouse model.","Transformed"],
+ ["Data status: written successfully into the warehouse.","Loaded"]
+]],
+["etl","etl-recon","REV",1,[
+ ["Reconciliation: compare individual records between source and target.","Row level",{alt:["row-level"]}],
+ ["Reconciliation: compare values within specific columns.","Column level",{alt:["column-level"]}],
+ ["Reconciliation: match records on their unique identifier.","Key based",{alt:["key-based"]}],
+ ["Reconciliation: compare the total of the Amount column in the source against the total in the target.","Column level",{alt:["column-level"]}],
+ ["The step that confirms, after a load, that the target data matches the source.","Reconciliation"]
+]],
+["etl","etl-tf","REV",1,[
+ ["Transformation level that operates on whole rows (selection, joining, normalization, aggregation).","Record level",{alt:["record-level"]}],
+ ["Transformation level that works on one value at a time (string, numeric, date/time, conditional).","Single field level",{alt:["single-field","single field","single-field level"]}],
+ ["Transformation level: many source fields into one target, or one source field into many.","Multi field level",{alt:["multi-field","multifield","multi-field level"]}],
+ ["Converting the text 9/22/80 into a real date.","Single field level",{alt:["single-field","single field","single-field level"]}],
+ ["IF Amount > 1000 THEN Large ELSE Small.","Single field level",{alt:["single-field","single field","single-field level"]}],
+ ["Table lookup, which replaces a code with its meaning.","Single field level",{alt:["single-field","single field","single-field level"]}],
+ ["First name and last name into Full Name.","Multi field level",{alt:["multi-field","multifield","multi-field level"]}],
+ ["An address split into street, city, state and ZIP.","Multi field level",{alt:["multi-field","multifield","multi-field level"]}]
+]],
+["etl","etl-rec","REV",1,[
+ ["Record-level function: keep only some rows, such as orders from 2026.","Selection"],
+ ["Record-level function: combine rows, such as customers with their orders.","Joining"],
+ ["Record-level function: split one record into several.","Normalization",{alt:["normalisation"]}],
+ ["Record-level function: summarise many rows into one.","Aggregation"]
+]],
+["etl","etl-load","REV",1,[
+ ["Load mode: the whole target is rewritten at intervals.","Refresh mode",{alt:["refresh"]}],
+ ["Load mode: only the changed rows are written.","Update mode",{alt:["update"]}],
+ ["Emptying and reloading the Product dimension every Sunday.","Refresh mode",{alt:["refresh"]}],
+ ["Writing just the 2,000 orders that changed today into a five-million-row table.","Update mode",{alt:["update"]}],
+ ["Load mode: simplest, but moves the most data.","Refresh mode",{alt:["refresh"]}]
+]],
+
+/* ---- Ch 6: Alteryx ---- */
+["alx","alx-self","REV",1,[
+ ["Alteryx Designer is ___ ETL: it installs on your own machine.","Self-service",{alt:["self service"]}]
+]],
+["alx","alx-prep","REV",1,[
+ ["Alteryx is used primarily for data blending and ___, not for visualization or machine learning.","Preparation",{alt:["data preparation","prep"]}]
+]],
+["alx","alx-doc","REV",1,[
+ ["The Alteryx workflow you build is both the process and its ___.","Documentation"]
+]],
+["alx","alx-parts","REV",1,[
+ ["Every Alteryx tool has the same three parts: an input anchor, a ___, and an output anchor.","Configuration panel",{alt:["configuration"]}]
+]],
+["alx","alx-flow","REV",1,[
+ ["On the Alteryx canvas, data flows ___.","Left to right"]
+]],
+["alx","alx-tools","REV",1,[
+ ["Choose which COLUMNS go forward; rename them; change their data type.","Select"],
+ ["Choose which ROWS go forward. Two outputs: T and F.","Filter"],
+ ["Create a new column, or update an existing one, from an expression.","Formula"],
+ ["Keep the first N, last N, every Nth, or a percentage, for testing before running the whole file.","Sample"],
+ ["Group rows and aggregate them: sum, count, min, max, average.","Summarize",{alt:["summarise"]}],
+ ["There is NO separate Group By tool. Which tool does the grouping?","Summarize",{alt:["summarise"]}],
+ ["Convert between text and a real date, in either direction.","DateTime",{alt:["date time"]}],
+ ["Turns the text 10/06/2026 into a real date, or shows 2026-10-06 as Oct 06, 2026 on a report.","DateTime",{alt:["date time"]}],
+ ["Main purpose: renaming columns and changing their data types (e.g., drop a Notes column, rename Amt to Amount).","Select"],
+ ["Keeps rows where State = TX or Sales > 1000.","Filter"],
+ ["Profit = Revenue minus Cost, calculated for every row.","Formula"],
+ ["Imports data from files, databases and cloud services and reads it in tabular form.","Input Data",{alt:["input","input data tool"]}],
+ ["Writes results back out.","Output Data",{alt:["output","output data tool"]}]
+]],
+["alx","alx-out","REV",1,[
+ ["Filter tool outputs.","T and F",{alt:["t f","t/f","true and false"]}]
+]],
+["alx","alx-rc","REV",1,[
+ ["The exam's favourite difference: Filter chooses ___.","Rows"],
+ ["The exam's favourite difference: Select chooses ___.","Columns"]
+]],
+["alx","alx-text","REV",1,[
+ ["Why data preparation matters: raw data often has dates stored as ___.","Text",{alt:["strings","string"]}]
+]],
+
+/* ======== FROM YOUR OTHER COURSE DOCUMENTS ======== */
+["alx","alx-tools","REV0",0,[
+ ["Remove duplicate rows based on the columns you choose.","Unique"],
+ ["Combine two streams by matching on a key. Three outputs: L, J and R.","Join"],
+ ["Stack two streams with the same columns: more rows, same columns.","Union"],
+ ["Pair every row of one stream with every row of another. Row counts multiply.","Append Fields",{alt:["append","append field"]}],
+ ["Show the data at any point in the workflow.","Browse"]
+]],
+["alx","alx-out","REV0",0,[
+ ["Join tool outputs.","L, J and R",{alt:["l j r","ljr","l j and r"]}]
+]],
+["alx","alx-shape","REV0",0,[
+ ["A JOIN matches rows on a key and makes the result ___.","Wider"],
+ ["A UNION stacks rows and makes the result ___.","Longer"],
+ ["Append Fields matches on nothing at all, so the row count ___.","Multiplies"]
+]],
+/* ---------------- INTRO TO BI ---------------- */
 ["bi","bi-comp4","CH1",0,[
  ["Ch. 1 BI component: 'a collection of tools for manipulating, mining, and analyzing the data in the data warehouse.'","Business analytics"],
  ["Ch. 1 BI component for monitoring and analyzing performance.","Business performance management (BPM)",{alt:["bpm","business performance management"]}],
@@ -516,27 +898,11 @@ const BLOCKS = [
 ]],
 
 /* ---------------- DATA WAREHOUSE ---------------- */
-["dw","dw-comp","REV",1,[
- ["A central repository of integrated, historical data from many sources, structured for analysis.","Data warehouse",{alt:["dw"]}],
- ["Staging for recent operational data on its way in. Current, not historical.","ODS",{alt:["operational data store"]}],
- ["The central integrated store serving the whole organisation.","EDW",{alt:["enterprise data warehouse"]}],
- ["A subset aimed at one department or subject area.","Data mart"],
- ["The description of structure, meaning, lineage and transformation rules.","Metadata"]
-]],
 ["dw","dw-comp","DW26",0,[
  ["DW26: 'a staging area that also allows queries, for analysis that needs near-real-time data.'","ODS",{alt:["operational data store"]}]
 ]],
 ["dw","dw-comp","IM3",0,[
  ["Instructor manual: 'a pool of data produced to support decision making.'","Data warehouse"]
-]],
-["dw","dw-char","REV",1,[
- ["Organised around business subjects (customer, product, sales), not around the processes that captured the data.","Subject-oriented",{alt:["subject oriented"]}],
- ["One standard for names, codes, units and formats, no matter which source a row came from.","Integrated"],
- ["Every row is tied to a point in time, so the warehouse holds a HISTORY rather than only today's values.","Time-variant",{alt:["time variant"]}],
- ["Data is loaded and then read. It is not updated or deleted the way an operational row is.","Nonvolatile",{alt:["non-volatile"]}],
- ["The defining characteristic the review calls 'the one most often forgotten.'","Time-variant",{alt:["time variant"]}],
- ["Follows from the four: data is also held pre-aggregated so analytical queries do not have to scan the detail every time.","Summarized",{alt:["summarised"]}],
- ["Follows from the four: deliberately denormalized into star or snowflake schemas, because query speed matters more than avoiding redundancy.","Not normalized",{alt:["denormalized","denormalised","not normalised"]}]
 ]],
 ["dw","dw-char","DW26",0,[
  ["Example: 'CA', 'Cali' and 'California' all become one agreed value.","Integrated"],
@@ -548,22 +914,10 @@ const BLOCKS = [
  ["Considered the father of data warehousing; defined it as 'subject oriented, integrated, nonvolatile, and time variant.'","Bill Inmon",{alt:["inmon","w h inmon","william inmon"]}],
  ["Practitioner whose definition lists: separate, available, integrated, time stamped, subject oriented, nonvolatile, accessible.","Sean Kelly",{alt:["kelly"]}]
 ]],
-["dw","dw-people","REV",1,[
- ["Whose twelve rules define what makes a data warehouse (per the review)?","Bill Inmon",{alt:["inmon"]}]
-]],
-["dw","dw-acr","REV",1,[
- ["ODS stands for ___.","Operational Data Store"],
- ["EDW stands for ___.","Enterprise Data Warehouse"]
-]],
 ["dw","dw-acr","DWF",0,[
  ["The slides define an 'oper mart' as ___.","An operational data mart",{alt:["operational data mart"]}],
  ["DWA stands for ___.","Data warehouse administrator"],
  ["SCD stands for ___.","Slowly Changing Dimension",{alt:["slowly changing dimensions"]}]
-]],
-["dw","dw-arch","REV",1,[
- ["Architecture: client → database. Simple, can be faster; poor scalability, logic lives in the client.","Two-tier",{alt:["2-tier","two tier"]}],
- ["Architecture: client → business logic → database. Scalable, separates concerns; more complex and costly.","Three-tier",{alt:["3-tier","three tier"]}],
- ["Architecture: browser → web/app server → database. Reachable anywhere, nothing to install; depends on the network, security surface.","Web-based",{alt:["web based","web"]}]
 ]],
 ["dw","dw-arch","DW26",0,[
  ["DW26: the first two tiers run on the same machine. Cheaper, but they compete for resources.","Two-tier",{alt:["2-tier","two tier"]}]
@@ -591,39 +945,12 @@ const BLOCKS = [
  ["Of those factors, how many does the F26 slide say are about people, not technology?","6",{alt:["six"]}],
  ["How many technical questions does the slide add (which DBMS, parallel processing, migration tools, retrieval tools)?","4",{alt:["four"]}]
 ]],
-["dw","dw-ik","REV",1,[
- ["Top-down direction.","Inmon",{alt:["bill inmon"]}],
- ["Bottom-up direction.","Kimball",{alt:["ralph kimball"]}],
- ["Builds the enterprise data warehouse first.","Inmon",{alt:["bill inmon"]}],
- ["Builds data marts first.","Kimball",{alt:["ralph kimball"]}],
- ["Modelling: normalized (3NF) at the warehouse.","Inmon",{alt:["bill inmon"]}],
- ["Modelling: dimensional star schemas.","Kimball",{alt:["ralph kimball"]}],
- ["Marts are dependent, derived from the EDW.","Inmon",{alt:["bill inmon"]}],
- ["The warehouse is the marts themselves, joined by conformed dimensions.","Kimball",{alt:["ralph kimball"]}],
- ["Strength: one consistent enterprise view.","Inmon",{alt:["bill inmon"]}],
- ["Strength: delivers business value quickly.","Kimball",{alt:["ralph kimball"]}],
- ["Cost: slow and expensive to start.","Inmon",{alt:["bill inmon"]}],
- ["Risk: inconsistency without conformed dimensions.","Kimball",{alt:["ralph kimball"]}]
-]],
 ["dw","dw-ik","IM3",0,[
  ["Most effective with a recognized need for an EDW, an executive 'champion', and willingness to invest before results show.","Inmon",{alt:["bill inmon"]}],
  ["Most effective for a 'proof of concept' before a full-scale EDW, or when a well-defined high-benefit area can be identified.","Kimball",{alt:["ralph kimball"]}]
 ]],
 ["dw","dw-ik","PON",0,[
  ["Chief proponent of the practical approach: plan at the enterprise level, then build conformed 'supermarts' one at a time.","Kimball",{alt:["ralph kimball"]}]
-]],
-["dw","dw-platform","REV",1,[
- ["Amazon's cloud warehouse on the review list.","Redshift",{alt:["amazon redshift"]}],
- ["Google's cloud warehouse on the review list.","BigQuery",{alt:["google bigquery","big query"]}],
- ["IBM's warehouse on the review list.","Netezza",{alt:["ibm netezza"]}],
- ["Oracle's warehouse on the review list.","Exadata",{alt:["oracle exadata"]}],
- ["Cloud warehouse on the review list that shares its name with a schema type.","Snowflake"]
-]],
-["dw","dw-kind","REV",1,[
- ["A warehouse that is run and scaled by a third party, so you pay for use instead of buying hardware.","Hosted or cloud warehouse",{alt:["hosted","cloud","cloud warehouse","hosted warehouse","hosted data warehouse"],kw:[["hosted","cloud"]]}]
-]],
-["dw","dw-orient","REV",1,[
- ["Twelve-rule themes to know: data integration, nonvolatility, consistency, time-variance, and a ___ rather than process orientation.","Business"]
 ]],
 ["dw","dw-rule","DWF",0,[
  ["Twelve rules, Rule 7: data warehouse development is ___-driven; the classical approach is process-driven.","Data"],
@@ -735,23 +1062,6 @@ const BLOCKS = [
 ]],
 
 /* ---------------- DATA MART ---------------- */
-["dm","dm-def","REV",1,[
- ["A subset of warehouse data aimed at one department, subject area or user group.","Data mart"]
-]],
-["dm","dm-why","REV",1,[
- ["Why marts exist: analysts are not wading through the whole enterprise.","Tailored data set",{kw:[["tailor"]]}],
- ["Why marts exist: less data, tuned for the queries that group actually runs.","Better performance",{kw:[["perform"]]}],
- ["Why marts exist: the relevant data is right there, in the shape that department thinks in.","Easier access",{kw:[["access"]]}],
- ["Why marts exist: you can limit sensitive data to the group entitled to see it.","Security"]
-]],
-["dm","dm-type","REV",1,[
- ["Drawn from the enterprise data warehouse. Inherits the EDW's model and definitions.","Dependent"],
- ["Built straight from source systems, without an EDW in between.","Independent"],
- ["Both: some data from the EDW, some from source systems.","Hybrid"],
- ["Use case: regional sales reporting built off the central warehouse.","Dependent"],
- ["Use case: a marketing analytics mart stood up quickly for one campaign.","Independent"],
- ["Use case: an EDW exists, but the department also needs data it does not yet carry.","Hybrid"]
-]],
 ["dm","dm-type","DW26",0,[
  ["No physical data. Middleware pulls the data at query time.","Virtual"],
  ["Use it when a merger or new product must be integrated quickly.","Hybrid"],
@@ -761,13 +1071,6 @@ const BLOCKS = [
 ]],
 ["dm","dm-type","DM",0,[
  ["DM slides: built on an existing data warehouse; 'a top-down approach.'","Dependent"]
-]],
-["dm","dm-num","REV",1,[
- ["The midterm review lists this many data mart types.","3",{alt:["three"]}]
-]],
-["dm","dm-ik","REV",1,[
- ["Build a centralized normalized EDW first. Result: dependent marts, consistent but slower to deliver.","Inmon",{alt:["bill inmon"]}],
- ["Build dimensional marts first, from source systems. Result: fast delivery, tied together by conformed dimensions.","Kimball",{alt:["ralph kimball"]}]
 ]],
 ["dm","dm-ik","DM",0,[
  ["Preferred when a stable business can afford the cost and time, and expects a unified single source of truth.","Inmon",{alt:["bill inmon"]}],
@@ -781,26 +1084,14 @@ const BLOCKS = [
  ["Comparison table: maintenance is easy.","Inmon",{alt:["bill inmon"]}],
  ["Comparison table: maintenance is difficult, often redundant and subject to revisions.","Kimball",{alt:["ralph kimball"]}]
 ]],
-["dm","dm-dis","REV",1,[
- ["Data mart disadvantage: the same data stored in several places.","Redundant storage",{kw:[["redundan"]]}],
- ["Data mart disadvantage if the marts are not properly governed.","Inconsistency",{kw:[["inconsisten"]]}],
- ["Data mart disadvantage if the marts are not integrated.","Siloed data, no enterprise-wide view",{kw:[["silo","enterprise"]]}]
-]],
 ["dm","dm-dis","PON",0,[
  ["Ponniah: the most severe drawback of the bottom-up approach.","Data fragmentation",{kw:[["fragment"]]}]
-]],
-["dm","dm-adv","REV",1,[
- ["Data mart advantage (review): ___ for a specific group.","Faster queries",{kw:[["fast"]]}]
 ]],
 ["dm","dm-adv4","DM",0,[
  ["Mart advantage: different departments can own and control their data.","Data maintenance"],
  ["Mart advantage: the simple design requires less technical skill.","Simple setup"],
  ["Mart advantage: key performance indicators (KPIs) can be easily tracked.","Analytics"],
  ["Mart advantage: building blocks of a future enterprise data warehouse.","Easy entry"]
-]],
-["dm","dm-vs","REV",1,[
- ["Enterprise-wide, integrated, all subjects, serves the whole organisation.","Data warehouse"],
- ["One subject area or department, a subset, serves one group.","Data mart"]
 ]],
 ["dm","dm-vs","PON",0,[
  ["Ponniah Fig. 2-5: 'union of all data marts'; organized on the E-R model.","Data warehouse"],
@@ -841,25 +1132,11 @@ const BLOCKS = [
 ]],
 
 /* ---------------- OLAP ---------------- */
-["olap","olap-fd","REV",1,[
- ["The numbers you want to analyse: sales revenue, quantity sold, profit margin.","Fact / measure",{alt:["fact","measure","facts","measures"]}],
- ["The descriptive attributes you slice them by: time, geography, product.","Dimension",{alt:["dimensions"]}],
- ["Central table holding the measures plus foreign keys to each dimension.","Fact table"],
- ["Surrounding table holding the descriptive attributes.","Dimension table"]
-]],
 ["olap","olap-fd","OLS",0,[
  ["Top-down organization within a dimension, used for aggregation and drill-down/roll-up (store → city → state → region).","Attribute hierarchy",{alt:["attribute hierarchies","hierarchy"]}]
 ]],
 ["olap","olap-fd","IM3",0,[
  ["The main operational structure in OLAP: a multidimensional data structure (actual or virtual) that allows fast analysis.","Cube",{alt:["data cube","olap cube"]}]
-]],
-["olap","olap-schema","REV",1,[
- ["Dimensions denormalized: one table per dimension.","Star",{alt:["star schema"]}],
- ["Dimensions normalized into several related tables.","Snowflake",{alt:["snowflake schema"]}],
- ["One hop from fact to dimension.","Star",{alt:["star schema"]}],
- ["Several hops; slower because of more joins.","Snowflake",{alt:["snowflake schema"]}],
- ["Some redundancy; relies on the ETL to keep it clean.","Star",{alt:["star schema"]}],
- ["Less redundancy; integrity better enforced by the model.","Snowflake",{alt:["snowflake schema"]}]
 ]],
 ["olap","olap-schema","OLS",0,[
  ["OLAP slides: its main benefit is that it uses smaller disk space.","Snowflake",{alt:["snowflake schema"]}],
@@ -874,13 +1151,6 @@ const BLOCKS = [
 ["olap","olap-key","DWM",0,[
  ["The fact table's primary key is a ___ key, always formed by combining the foreign keys to the dimension tables.","Composite",{alt:["composite primary key","composite key"]}]
 ]],
-["olap","olap-ops","REV",1,[
- ["Aggregate up a hierarchy: day to month to year.","Roll-up",{alt:["rollup","roll up","drill-up","drill up"]}],
- ["The opposite of roll-up: move to a lower level of detail.","Drill-down",{alt:["drill down","drilldown"]}],
- ["Fix ONE dimension and look at the rest: 'only 2026.'","Slice"],
- ["Fix SEVERAL dimensions at once: '2026, in Texas, for laptops.'","Dice"],
- ["Rotate the cube to put a different dimension on the axis.","Pivot"]
-]],
 ["olap","olap-ops","OLS",0,[
  ["OLAP slides: an operation involving (across) more than one fact table.","Drill across",{alt:["drill-across"]}]
 ]],
@@ -889,18 +1159,9 @@ const BLOCKS = [
  ["DWM example: weekly to quarterly to annually.","Roll-up",{alt:["rollup","roll up","drill-up","drill up"]}],
  ["DWM example: products divided into styles and regions into sub-regions.","Drill-down",{alt:["drill down","drilldown"]}]
 ]],
-["olap","olap-srv","REV",1,[
- ["Data sits in a relational database. Flexible, scales to big data, slower to answer.","ROLAP"],
- ["Data sits in a multidimensional store (a real cube). Very fast, but the cube must be built and sized in advance.","MOLAP"],
- ["Summaries in the cube, detail left relational. Some of the speed, some of the flexibility.","HOLAP"],
- ["The engine underneath MOLAP.","MDBMS",{alt:["multidimensional database management system"]}]
-]],
 ["olap","olap-srv","OLS",0,[
  ["ROLAP vs MOLAP slide: very easy to implement; high response time; requires less memory.","ROLAP"],
  ["ROLAP vs MOLAP slide: less response time due to prefabricated cubes; requires a large amount of memory.","MOLAP"]
-]],
-["olap","olap-acr","REV",1,[
- ["MDBMS stands for ___.","Multidimensional Database Management System",{alt:["multi-dimensional database management system"]}]
 ]],
 ["olap","olap-acr","OLS",0,[
  ["OLAP stands for ___.","Online Analytical Processing",{alt:["on-line analytical processing"]}],
@@ -915,18 +1176,6 @@ const BLOCKS = [
  ["CD paper: example of a MOLAP server.","Essbase",{alt:["essbase (arbor)","arbor essbase"]}],
  ["CD paper: example of a ROLAP server.","MicroStrategy"],
  ["CD paper: example of a specialized SQL server for star and snowflake schemas.","Redbrick",{alt:["red brick"]}]
-]],
-["olap","olap-vs","REV",1,[
- ["Purpose: record transactions.","OLTP"],
- ["Purpose: analyse transactions.","OLAP"],
- ["Typical operation: insert, update, small reads.","OLTP"],
- ["Typical operation: large aggregating reads.","OLAP"],
- ["Data age: historical.","OLAP"],
- ["Data age: current.","OLTP"],
- ["Design: normalized.","OLTP"],
- ["Design: denormalized, dimensional.","OLAP"],
- ["Users: fewer; analysts and managers.","OLAP"],
- ["Users: many; operational staff.","OLTP"]
 ]],
 ["olap","olap-vs","OLS",0,[
  ["Table 3.5 execution speed: slow (resource intensive, complex, large-scale queries).","OLAP"],
@@ -948,55 +1197,10 @@ const BLOCKS = [
 ]],
 
 /* ---------------- DATA INTEGRATION & ETL ---------------- */
-["etl","etl-tech","REV",1,[
- ["Integration technique: everything is pulled into one store. One copy; as fresh as the last load.","Consolidation (ETL)",{alt:["consolidation","etl"]}],
- ["Integration technique: a virtual view queries the sources on demand. No copy; live.","Federation (EII)",{alt:["federation","data federation","eii"]}],
- ["Integration technique: changes are pushed between systems. Many copies; near real time.","Propagation (EAI / EDR)",{alt:["propagation","data propagation","eai","edr"]}],
- ["Which integration technique gives LIVE data without copying it?","Federation (EII)",{alt:["federation","data federation","eii"]}]
-]],
-["etl","etl-fresh","REV",1,[
- ["Freshness of propagation.","Near real time",{alt:["near real-time","near-real-time"]}],
- ["Freshness of consolidation.","As fresh as the last load",{kw:[["last load"]]}],
- ["Freshness of federation.","Live"]
-]],
-["etl","etl-copy","REV",1,[
- ["Is the data copied under propagation?","Yes, many copies",{kw:[["many"]]}],
- ["Is the data copied under consolidation?","Yes, one copy",{kw:[["one"]]}],
- ["Is the data copied under federation?","No",{alt:["no copy","none"]}]
-]],
-["etl","etl-map","REV",1,[
- ["The design work done before any ETL code: understand requirements, design the target, map every target field to a source field, write the rules, plan the flow.","Mapping and metadata",{alt:["mapping and metadata management","mapping"],kw:[["mapping"]]}]
-]],
-["etl","etl-steps","REV",1,[
- ["ETL step: get the data out of the source. Fixes: the data is locked inside operational systems.","Capture / Extract",{alt:["capture","extract","extraction"]}],
- ["ETL step: correct errors and inconsistencies. Misspellings, TX vs Texas vs Tex, missing values, wrong field used.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing","cleaning"]}],
- ["ETL step: reshape to the warehouse model. Fixes: source structure does not match the target.","Transform",{alt:["transformation"]}],
- ["ETL step: write it and make it fast to read. Fixes: raw loaded data is slow to query.","Load / Index",{alt:["load","index","load and index"]}]
-]],
 ["etl","etl-steps","DI",0,[
  ["DI slides: decoding, reformatting, time stamping, conversion, key generation, merging, error detection/logging, locating missing data.","Scrub / Cleanse",{alt:["scrub","cleanse","cleansing","data cleansing","scrubbing"]}]
 ]],
-["etl","etl-ext","REV",1,[
- ["A snapshot of everything, at a point in time. Used for the initial load.","Static extract",{alt:["static"]}],
- ["Only what changed since the last run. Used for every load after the first.","Incremental extract",{alt:["incremental"]}]
-]],
-["etl","etl-marker","REV",1,[
- ["Incremental extract needs a reliable change marker: a timestamp, a log or a ___.","Flag"]
-]],
-["etl","etl-rej","REV",1,[
- ["Data status: Extracted → Transformed → Loaded, with ___ for rows that fail validation or a transformation rule.","Rejected"]
-]],
-["etl","etl-recon","REV",1,[
- ["Reconciliation: compare individual records between source and target.","Row level",{alt:["row-level"]}],
- ["Reconciliation: compare values within specific columns.","Column level",{alt:["column-level"]}],
- ["Reconciliation: match records on their unique identifier.","Key based",{alt:["key-based"]}]
-]],
-["etl","etl-tf","REV",1,[
- ["Transformation level that operates on whole rows (selection, joining, normalization, aggregation).","Record level",{alt:["record-level"]}],
- ["Transformation level that works on one value at a time (string, numeric, date/time, conditional).","Single field level",{alt:["single-field","single field","single-field level"]}],
- ["Transformation level: many source fields into one target, or one source field into many.","Multi field level",{alt:["multi-field","multifield","multi-field level"]}]
-]],
-["etl","etl-rec","DI",1,[
+["etl","etl-rec","DI",0,[
  ["Record-level function: partitioning data according to predefined criteria.","Selection"],
  ["Record-level function: combining data from various sources into a single table.","Joining"],
  ["Record-level function: producing smaller, well-structured relations (a split).","Normalization",{alt:["normalisation"]}],
@@ -1006,10 +1210,6 @@ const BLOCKS = [
  ["Single-field transformation that uses a formula or logical expression.","Algorithmic"],
  ["Single-field transformation that uses a separate table keyed by source record code.","Table lookup"],
  ["Single-field transformation in its general form: some function translates data from old form to new form.","Basic",{alt:["basic representation"]}]
-]],
-["etl","etl-load","REV",1,[
- ["Load mode: the whole target is rewritten at intervals (bulk rewriting).","Refresh mode",{alt:["refresh"]}],
- ["Load mode: only the changed rows are written.","Update mode",{alt:["update"]}]
 ]],
 ["etl","etl-trans","DI",0,[
  ["Reconciled data layer: typical operational data is ___, not historical.","Transient"]
@@ -1069,47 +1269,11 @@ const BLOCKS = [
 ]],
 
 /* ---------------- ALTERYX ---------------- */
-["alx","alx-self","REV",1,[
- ["Alteryx Designer is ___ ETL: it installs on your own machine.","Self-service",{alt:["self service"]}]
-]],
-["alx","alx-doc","REV",1,[
- ["The Alteryx workflow you build is both the process and its ___.","Documentation"]
-]],
-["alx","alx-parts","REV",1,[
- ["Every Alteryx tool has the same three parts: an input anchor, a ___, and an output anchor.","Configuration panel",{alt:["configuration"]}]
-]],
-["alx","alx-flow","REV",1,[
- ["On the Alteryx canvas, data flows ___.","Left to right"]
-]],
-["alx","alx-tools","REV",1,[
- ["Choose which COLUMNS go forward; rename them; change their data type.","Select"],
- ["Choose which ROWS go forward. Two outputs: T and F.","Filter"],
- ["Create a new column, or update an existing one, from an expression.","Formula"],
- ["Reorder rows by one or more columns.","Sort"],
- ["Keep the first N, last N, every Nth, or a percentage, for testing before running the whole file.","Sample"],
- ["Remove duplicate rows based on the columns you choose.","Unique"],
- ["Group rows and aggregate them: sum, count, min, max, average.","Summarize",{alt:["summarise"]}],
- ["There is NO separate Group By tool. Which tool does the grouping?","Summarize",{alt:["summarise"]}],
- ["Combine two streams by matching on a key. Three outputs: L, J and R.","Join"],
- ["Stack two streams with the same columns: more rows, same columns.","Union"],
- ["Pair every row of one stream with every row of another. Row counts multiply.","Append Fields",{alt:["append","append field"]}],
- ["Split one column holding several values into separate columns.","Text to Columns",{alt:["text to column"]}],
- ["Convert between text and a real date, in either direction.","DateTime",{alt:["date time"]}],
- ["Remove nulls, whitespace, punctuation and unwanted characters; change letter case.","Data Cleansing"],
- ["Show the data at any point in the workflow.","Browse"],
- ["Read data in, write results out.","Input Data / Output Data",{alt:["input data","output data","input","output"]}]
-]],
 ["alx","alx-tools","DI",0,[
- ["Renames fields, e.g., takes field names from the first row of data.","Dynamic Rename"]
-]],
-["alx","alx-out","REV",1,[
- ["Filter tool outputs.","T and F",{alt:["t f","t/f","true and false"]}],
- ["Join tool outputs.","L, J and R",{alt:["l j r","ljr","l j and r"]}]
-]],
-["alx","alx-shape","REV",1,[
- ["A JOIN matches rows on a key and makes the result ___.","Wider"],
- ["A UNION stacks rows and makes the result ___.","Longer"],
- ["Append Fields matches on nothing at all, so the row count ___.","Multiplies"]
+ ["Renames fields, e.g., takes field names from the first row of data.","Dynamic Rename"],
+ ["Rearranges the records in a table or file by sorting in order.","Sort"],
+ ["Takes the text in one column and splits the string value into separate, multiple columns (or rows), based on delimiters.","Text to Columns",{alt:["text to column"]}],
+ ["Fixes common data quality issues: replace nulls, remove unwanted characters, modify case.","Data Cleansing"]
 ]],
 ["alx","alx-30","DI",0,[
  ["Alteryx supports connection to how many file types?","30+",{alt:["30","over 30","more than 30","30 plus"]}]
@@ -1128,15 +1292,174 @@ const BLOCKS = [
  ["Why Alteryx: works well with visualization tools, external applications and APIs.","Extensible"],
  ["Why Alteryx: database and server tools boost processing power for big data.","Scalable"],
  ["Why Alteryx: enables iterative development by processing large datasets quickly.","Fast"]
-]],
-["alx","alx-text","REV",1,[
- ["Why data preparation matters: raw data often has dates stored as ___.","Text",{alt:["strings","string"]}]
 ]]
 ];
 
 /* ===== ACTIVITIES =====
    type 'mc': questions with options; c = index of correct; why = rationale shown after answering. */
 const ACTIVITIES = [
+{
+ id: "traps", title: "Review Traps", sub: "Wrong-answer traps the review warns about", src: "REV",
+ note: "Every question here comes from a line in the latest review that names a wrong answer or a NOT statement. Multiple-answer questions work like the exam: tick every correct box. On the exam a wrong box costs marks, so the score here only counts a question if every box is right.",
+ type: "mc",
+ qs: [
+  { q: "Which is NOT a reason BI grew?",
+    o: ["Data volumes became small enough to handle by hand", "Data volume and variety rose faster than anyone could handle by hand", "Storage and computing got cheaper", "Competitive pressure for faster, evidence-backed decisions"], c: 0,
+    why: "Review, 'Why BI grew': 'Be ready to spot a statement that is NOT a reason, such as data volumes becoming small enough to handle by hand.'" },
+  { q: "Select ALL that BI tools are NOT.", ma: true,
+    o: ["The systems that record a sale at the point of purchase", "A replacement for the operational systems", "Where backups are kept", "Focused on the strategic and tactical use of information"], c: [0, 1, 2],
+    why: "Review: 'BI tools focus on the strategic and tactical use of information. They are not the systems that record a sale at the point of purchase, they do not replace the operational systems, and they are not where backups are kept.'" },
+  { q: "Select ALL that are dashboard and reporting tools (not warehouse platforms).", ma: true,
+    o: ["Tableau", "Microsoft Power BI", "IBM Cognos", "Amazon Redshift", "Snowflake"], c: [0, 1, 2],
+    why: "Review: Tableau, Power BI, Qlik, SAP BusinessObjects, IBM Cognos and MicroStrategy 'are dashboard and reporting tools; do not confuse them with warehouse platforms such as Amazon Redshift.' Snowflake is on the warehouse-platform list." },
+  { q: "Select ALL that a data warehouse is NOT.", ma: true,
+    o: ["The database that records each transaction as it happens", "A single department's subset of data", "A virtual view that reads the sources on demand", "A central store of integrated, historical data"], c: [0, 1, 2],
+    why: "Review, Chapter 2: 'It is not the database that records each transaction as it happens, it is not a single department's subset of data, and it is not a virtual view that reads the sources on demand.'" },
+  { q: "Nonvolatile means:",
+    o: ["Data is loaded and then read; it is not updated or deleted the way an operational row is", "The data survives a power cut", "The data is refreshed in real time", "The data is stored in a normalized design"], c: 0,
+    why: "Review: 'Nonvolatile does not mean the data survives a power cut; that is a common wrong answer.'" },
+  { q: "What do you give up by denormalizing the warehouse?",
+    o: ["Storage efficiency, because some data is repeated", "Nothing; denormalized tables use less space", "The ability to store normalized tables, which relational databases can't do", "Query speed"], c: 0,
+    why: "Review: 'The price of denormalizing is storage efficiency: some data is repeated. Denormalized tables do not use less space, and relational databases are perfectly able to store normalized tables; the choice is made for speed.'" },
+  { q: "Select ALL that are metadata.", ma: true,
+    o: ["A note that the Revenue column is in US dollars, summed from ERP order lines", "Where a column came from and how it was changed on the way in", "The revenue value of $4,500 for March", "A customer's address", "A chart of monthly sales"], c: [0, 1],
+    why: "Review: 'A note saying that the Revenue column is in US dollars, summed from ERP order lines, is metadata. The revenue value of 4,500 dollars for March is data, not metadata, and so is a customer's address or a chart of monthly sales.'" },
+  { q: "The twelve rules that define a data warehouse come from:",
+    o: ["Bill Inmon", "Ralph Kimball", "E. F. Codd", "Microsoft"], c: 0,
+    why: "Review: 'The twelve rules that define a data warehouse come from Bill Inmon, not Ralph Kimball and not E. F. Codd, whose twelve rules are about relational databases.'" },
+  { q: "Updating warehouse rows in place as transactions occur is:",
+    o: ["The opposite of what the twelve rules call for", "Required by rule 6", "How time-variance works", "Fine if done at night"], c: 0,
+    why: "Review: 'Updating warehouse rows in place as transactions occur is the opposite of what the rules call for.'" },
+  { q: "True or false: data warehouses are subsets of data marts.",
+    o: ["False", "True"], c: 0,
+    why: "Review: 'Data warehouses are not subsets of data marts; it is the other way round.'" },
+  { q: "Which is NOT a reason to build a data mart?",
+    o: ["Providing one integrated, enterprise-wide view", "Tailored data for one business unit", "Better query performance for one group", "Limiting sensitive data such as payroll"], c: 0,
+    why: "Review: 'Providing one integrated, enterprise-wide view is NOT a reason to build a mart; that is the warehouse's job.'" },
+  { q: "Faster queries for one group is a data mart:",
+    o: ["Advantage", "Disadvantage"], c: 0,
+    why: "Review: 'Faster queries for one group is an advantage, not a disadvantage.'" },
+  { q: "Sales and service define 'active customer' differently, so their marts disagree. What's the fix?",
+    o: ["Agree one shared definition and load both marts from it", "Delete one of the marts", "Let each department keep its own rule", "Load the marts at different times of day"], c: 0,
+    why: "Review: 'the answer is to agree one shared definition and load both marts from it, not to delete a mart, let each department keep its own rule, or load the marts at different times of day.'" },
+  { q: "Select ALL that are true of how a data mart is designed.", ma: true,
+    o: ["Usually modelled as a dimensional star schema", "Can hold summarized data, just as the warehouse does", "Must be normalized to third normal form", "Can only hold daily detail"], c: [0, 1],
+    why: "Review: 'Data marts are usually modelled as dimensional star schemas... A mart does not have to be normalized to third normal form, and it can hold summarized data just as the warehouse does.'" },
+  { q: "Select ALL the components of the basic star schema.", ma: true,
+    o: ["Facts", "Dimensions", "Attributes", "Attribute hierarchies", "Indexes"], c: [0, 1, 2, 3],
+    why: "Review: 'The basic star schema has four components: facts, dimensions, attributes and attribute hierarchies.'" },
+  { q: "'2026, Texas and laptops together' is a:",
+    o: ["Dice", "Slice", "Pivot", "Roll-up"], c: 0,
+    why: "Review: 'The pair most often confused is slice and dice: one dimension fixed is a slice, several fixed is a dice.'" },
+  { q: "Which is NOT one of the four ETL steps?",
+    o: ["Federate", "Capture / Extract", "Scrub / Cleanse", "Load / Index"], c: 0,
+    why: "Review: 'Transform comes immediately after cleanse, load is always last, and federate is not one of the steps.'" },
+  { q: "Which is NOT a cleansing task?",
+    o: ["Building indexes", "Fixing TX vs Texas vs Tex", "Filling blank ZIP codes", "Correcting values entered in the wrong field"], c: 0,
+    why: "Review: 'This is the stage where anomalies are detected and corrected. Building indexes is not a cleansing task.'" },
+  { q: "Select ALL that happen later, when the ETL process runs, rather than during design.", ma: true,
+    o: ["Indexing", "Reconciling", "Rejecting rows", "Mapping every target field to a source field", "Understanding the business requirement"], c: [0, 1, 2],
+    why: "Review, 'Design before any code': 'Indexing, reconciling and rejecting rows happen later, when the process runs.'" },
+  { q: "True or false: federation consolidates the data into one database.",
+    o: ["False", "True"], c: 0,
+    why: "Review: 'Federation does not consolidate the data into one database.' It's a virtual view; nothing is copied." },
+  { q: "Alteryx Designer is used primarily for:",
+    o: ["Data blending and preparation", "Visualization", "Machine learning", "Recording transactions"], c: 0,
+    why: "Review: 'It is used primarily for data blending and preparation, not for visualization or machine learning.'" },
+  { q: "True or false: the Filter tool deletes the rows that don't meet the condition.",
+    o: ["False", "True"], c: 0,
+    why: "Review: 'Rows that meet the condition come out of the T (true) anchor; rows that do not come out of the F (false) anchor. Nothing is deleted.'" },
+  { q: "True or false: the Select tool can change the number of rows.",
+    o: ["False", "True"], c: 0,
+    why: "Review: 'Select never changes the number of rows.'" }
+ ]
+},
+{
+ id: "apply", title: "Applied Scenarios", sub: "Scenarios from the latest review", src: "REV",
+ note: "The review says about 10% of the exam asks you to apply several ideas at once. These scenarios come from the review's own examples. Where a question combines two of the review's ideas, the rationale says so.",
+ type: "mc",
+ qs: [
+  { q: "A bank's priority is one consistent enterprise view, and it accepts a long and costly build. Which approach fits?",
+    o: ["Inmon: build the normalized EDW first, then derive dependent marts", "Kimball: build star-schema marts first", "Independent marts for each department", "Federation over the source systems"], c: 0,
+    why: "Review: 'A bank whose priority is one consistent enterprise view, and which accepts a long and costly build, fits Inmon.'" },
+  { q: "A company wants a working sales analysis within three months and plans to add other departments later. Which approach fits?",
+    o: ["Kimball: build data marts first and let the warehouse grow", "Inmon: build the EDW first", "A centralized EDW with no marts", "An ODS only"], c: 0,
+    why: "Review: 'A company that wants a working sales analysis within three months and plans to add other departments later fits Kimball.'" },
+  { q: "Under Kimball, what keeps the marts from drifting apart?",
+    o: ["Sharing the same dimensions, such as one common Customer and Product, across every mart", "Building them all on the same night", "Normalizing every mart to 3NF", "Giving each department its own definitions"], c: 0,
+    why: "Review: Kimball's risk is that 'marts drift apart unless they share the same dimensions, such as one common Customer and Product, across every mart.'" },
+  { q: "Sales stores TX, HR stores Texas, finance uses 48. Which characteristic is at stake, and which ETL step fixes it?",
+    o: ["Integrated; Scrub / Cleanse", "Time-variant; Load / Index", "Subject-oriented; Transform", "Nonvolatile; Capture / Extract"], c: 0,
+    why: "Combines two review ideas. Integrated: 'if sales codes the state as TX, HR stores Texas and finance uses the code 48, the warehouse holds one standard code.' Scrub / Cleanse 'corrects errors and inconsistencies: ... TX against Texas against Tex.'" },
+  { q: "An analyst finds a typo in a warehouse row. What should happen?",
+    o: ["Leave the row; the correction arrives with the next ETL load", "Edit the row directly in the warehouse", "Delete the row", "Rebuild the warehouse"], c: 0,
+    why: "Review, nonvolatile in practice: 'if an analyst spots a typo in a warehouse row, they do not edit it; the correction arrives with the next ETL load.'" },
+  { q: "An order's status changes from shipped to delivered. What does the warehouse do?",
+    o: ["Loads a new time-stamped row and leaves the earlier row alone", "Overwrites the status in place", "Deletes the old row", "Ignores the change until year end"], c: 0,
+    why: "Review, time-variant in practice: 'the warehouse loads a new time-stamped row and leaves the earlier row alone.'" },
+  { q: "Why are heavy analytical queries run against the warehouse rather than the operational database?",
+    o: ["They would slow the transaction system down, and the operational database doesn't keep history anyway", "Operational databases can't run SQL", "The warehouse is normalized", "The operational database is a data mart"], c: 0,
+    why: "Review: 'running them on the operational database would slow the transaction system down, and the operational database does not keep the history anyway.'" },
+  { q: "Marketing builds its own mart from the CRM and web logs in three weeks for one campaign. What type is it, and what risk does it accept?",
+    o: ["Independent; inconsistency with other data", "Dependent; slow delivery", "Hybrid; no security", "Virtual; no history"], c: 0,
+    why: "Review: this is 'an independent mart.' 'Departments accept the risk of inconsistency when no enterprise warehouse exists or the warehouse cannot deliver what they need in time.'" },
+  { q: "A finance mart takes ledger data from the warehouse and exchange rates straight from a market-data feed. Which type?",
+    o: ["Hybrid", "Dependent", "Independent", "Federated"], c: 0,
+    why: "Review: 'A finance mart that takes ledger data from the warehouse and exchange rates straight from a market-data feed is hybrid.'" },
+  { q: "The CFO gets three different revenue totals for the same month from three marts. What's wrong, and what's the most direct fix?",
+    o: ["The marts aren't governed together; enforce one shared definition of revenue", "The marts are too small; merge them into one", "The ETL runs too often; load less frequently", "The marts are dependent; make them independent"], c: 0,
+    why: "Review: inconsistency arises 'if the marts are not governed together.' 'The most direct way to stop marts reporting different revenue figures is to enforce one shared definition of revenue across all of them.'" },
+  { q: "A company new to data warehousing wants to prove the value before committing to a full warehouse. What should it do?",
+    o: ["Build a data mart for one department first", "Build the full EDW first", "Buy a dashboard tool and skip the warehouse", "Run analysis on the operational database"], c: 0,
+    why: "Review: 'should build a data mart for one department first. In this way a data mart can serve as a test vehicle.'" },
+  { q: "A dashboard reads the CRM and ERP live through one virtual view. Which technique is this, and what's the drawback?",
+    o: ["Federation; every query reaches back into the source systems", "Consolidation; data is only as fresh as the last load", "Propagation; all the copies must be kept in step", "Consolidation; nothing is copied"], c: 0,
+    why: "Review: 'A dashboard that reads the CRM and the ERP live through one virtual view is federation.' Its drawback: 'every query reaches back into the source systems.'" },
+  { q: "You write just the 2,000 orders that changed today into a five-million-row table. Which load mode, and which kind of extract feeds it?",
+    o: ["Update mode, fed by an incremental extract", "Refresh mode, fed by a static extract", "Refresh mode, fed by an incremental extract", "Update mode, fed by a static extract"], c: 0,
+    why: "Combines two review ideas. Update mode: 'writing just the 2,000 orders that changed today into a five-million-row table.' An incremental extract 'captures only the rows that changed since the last run.' Static extracts are for the initial load." },
+  { q: "Order lines need to become daily totals in the warehouse. Which ETL step, and which kind of record-level function?",
+    o: ["Transform; aggregation", "Scrub / Cleanse; selection", "Load / Index; joining", "Capture / Extract; normalization"], c: 0,
+    why: "Combines two review ideas. Transform reshapes data, 'such as ... rolling order lines up to daily totals.' Aggregation 'summarises many rows into one.'" }
+ ]
+},
+{
+ id: "rows", title: "Alteryx Row Counts", sub: "The review's worked row-count example", src: "REV",
+ note: "From the review: 'The exam may give you an input of a known size and ask what each tool outputs.' The input is 1,000 order rows, 10 columns, 4 regions. Two questions chain tools together; their rationale shows the arithmetic.",
+ type: "mc",
+ qs: [
+  { q: "Filter on Region = West, where 250 rows match. How many rows come out of the T anchor?",
+    o: ["250", "750", "1,000", "4"], c: 0,
+    why: "Review: 'T outputs 250 rows and F outputs 750.'" },
+  { q: "Same Filter. How many rows come out of the F anchor?",
+    o: ["750", "250", "0", "1,000"], c: 0,
+    why: "Review: 'F outputs 750.' Nothing is deleted. The rows that don't match come out of F." },
+  { q: "Sample, first 100 rows. How many rows come out?",
+    o: ["100", "1,000", "900", "10"], c: 0,
+    why: "Review: 'Sample, first 100 rows: outputs 100 rows.'" },
+  { q: "Summarize, grouped by Region with Sum of Sales. How many rows come out?",
+    o: ["4", "1,000", "10", "1"], c: 0,
+    why: "Review: 'outputs 4 rows, one per region.'" },
+  { q: "Select with 3 of the 10 columns deselected. How many rows come out?",
+    o: ["1,000", "700", "7", "3"], c: 0,
+    why: "Review: 'Select with 3 of the 10 columns deselected: still outputs 1,000 rows.' Only the columns change (10 − 3 = 7 columns)." },
+  { q: "Formula adds a Profit column. How many rows come out?",
+    o: ["1,000", "1,001", "11", "4"], c: 0,
+    why: "Review: 'Formula or DateTime: still output 1,000 rows; they change columns, not rows.'" },
+  { q: "Select ALL the tools that can output fewer rows than they receive.", ma: true,
+    o: ["Filter", "Sample", "Summarize", "Select", "Formula", "DateTime"], c: [0, 1, 2],
+    why: "Review: 'Filter, Sample and Summarize can output fewer rows than they receive. Select, Formula and DateTime never change the row count.'" },
+  { q: "Select ALL the tools that never change the row count.", ma: true,
+    o: ["Select", "Formula", "DateTime", "Filter", "Summarize"], c: [0, 1, 2],
+    why: "Review: 'Select, Formula and DateTime never change the row count.'" },
+  { q: "Chain: Filter on Region = West (250 match), then Summarize the T output grouped by Region. How many rows come out?",
+    o: ["1", "4", "250", "750"], c: 0,
+    why: "Worked from the review's rules: the T output holds only West rows (250), and Summarize gives one row per group. With only one region left, that's 1 row." },
+  { q: "Chain: Sample the first 100 rows, then DateTime converts the Order Date text to a real date. How many rows come out?",
+    o: ["100", "1,000", "200", "4"], c: 0,
+    why: "Worked from the review's rules: Sample outputs 100 rows, and the review says Select, Formula and DateTime 'never change the row count.'" }
+ ]
+},
 {
  id: "check", title: "Check Yourself", sub: "Data Warehousing F26 slides", src: "DW26",
  note: "Six 'Check Yourself' prompts from the F26 deck. The slides pose these but don't print answers, so each answer below is the one the same deck's tables support, and the rationale says which slide.",
@@ -1162,7 +1485,7 @@ const ACTIVITIES = [
     why: "F26 Dependent vs Independent slide: 'Independent marts are quicker. Build several of them and you have rebuilt the silo problem from the start of this session, one layer up.' Silos = 'sales, marketing and finance use different words for the same customer.'" },
   { q: "Same scenario: which mart type fixes it?",
     o: ["Dependent", "Independent", "Virtual", "Hybrid"], c: 0,
-    why: "F26 four-kinds table: Dependent marts draw 'directly from a central data warehouse.' Use them when 'an EDW already exists and you want consistency.' The review adds that a dependent mart 'inherits the EDW's model and definitions', so both marts would share one definition of revenue." },
+    why: "F26 four-kinds table: Dependent marts draw 'directly from a central data warehouse.' Use them when 'an EDW already exists and you want consistency.' The latest review adds that dependent marts inherit the warehouse's model and definitions and 'stay consistent with one another', and that 'the most direct way to stop marts reporting different revenue figures is to enforce one shared definition of revenue.'" },
   { q: "Your team wants to keep five years of raw clickstream JSON 'in case we need it later.' Warehouse or lake?",
     o: ["Data lake", "Data warehouse", "Data mart", "ODS"], c: 0,
     why: "F26 warehouse vs lake table: a lake holds 'any data in raw or native format', is 'designed for low-cost storage', and is schema-on-read, so you transform 'before analysis.' A warehouse wants 'structured, processed' data transformed 'before entering the warehouse.'" }
@@ -1178,7 +1501,7 @@ const ACTIVITIES = [
     why: "Manual §3.2 Q2: 'most databases are highly normalized, in part to avoid update anomalies. Data warehouses are highly denormalized for performance reasons. This is acceptable because their content is never updated, just added to.'" },
   { q: "Per the instructor manual, what is an ODS?",
     o: ["The database from which a business operates on an ongoing basis", "An all-encompassing DW covering all subject areas of interest to the entire organization", "A smaller DW designed around one problem, function or topic", "Data about data"], c: 0,
-    why: "Manual §3.2 Q3–4. The other options are its definitions of an EDW, a data mart and metadata. Note: your Midterm Review words this differently ('staging for recent operational data on its way in; current, not historical'). Know both." },
+    why: "Manual §3.2 Q3–4. The other options are its definitions of an EDW, a data mart and metadata. Note: your Midterm Review words this differently ('a staging store for recent, current operational data on its way into the warehouse'). For the exam, go with the review." },
   { q: "What is the key difference between a two-tier and a three-tier architecture?",
     o: ["In two-tier, the application and DW reside on the same machine; in three-tier, on separate machines. The user can't see the difference", "Two-tier has no client system", "Three-tier removes the need for ETL", "Users get a different interface in each"], c: 0,
     why: "Manual §3.4 Q1: 'Both provide the same user visibility... in a two-tiered architecture, the application and data warehouse reside on the same machine; in a three-tiered architecture, they are on separate machines.'" },
@@ -1366,7 +1689,7 @@ const ACTIVITIES = [
 },
 {
  id: "alteryx", title: "Alteryx Tool Examples", sub: "Worked examples on the Integration slides", src: "DI",
- note: "Built from the example tables on the Alteryx slides. Where a slide shows only the inputs (Join, Append Fields), the output is worked out from the review's rule, and the rationale says so.",
+ note: "Built from the example tables on the Alteryx slides. The Join and Append Fields slides show only the inputs, so those two use the rule from the earlier midterm review. For the latest review's row-count example, see the Alteryx Row Counts tab.",
  type: "mc",
  qs: [
   { q: "Formula tool slide: Pearl has Total Sales $73,600.00 and Customer Count 230. What is Avg Sales Per Cust?",
@@ -1393,15 +1716,15 @@ const ACTIVITIES = [
   { q: "Text to Columns slide: '1001 17th St, Denver, CO, 80202' split on commas. What lands in Address3?",
     o: ["CO", "Denver", "80202", "1001 17th St"], c: 0,
     why: "Slide output: Address1 = 1001 17th St, Address2 = Denver, Address3 = CO, Address4 = 80202." },
-  { q: "Dynamic Rename slide: 'Take Field Names from First Row of Data' turns Field1–Field4 into:",
-    o: ["Address, City, State, ZIP", "Address1, Address2, Address3, Address4", "Field1, Field2, Field3, Field4", "Street, Town, Region, Code"], c: 0,
-    why: "The first data row held 'Address, City, State, ZIP', and the slide shows those becoming the column headers." },
   { q: "Join slide: Left IDs 12, 33, 36 and Right IDs 2, 12, 36, joined on ID = ID. Which IDs come out of the J output?",
     o: ["12 and 36", "33 only", "2 only", "2, 12, 33, 36"], c: 0,
-    why: "Worked out from the rule (the slide's output is an image): Join 'combines two streams by matching on a key. Three outputs: L, J and R.' Only 12 and 36 appear on both sides, so they go to J. 33 goes to L and 2 goes to R." },
+    why: "The Join slide shows the two inputs joined on ID = ID. The earlier midterm review explains the outputs: Join 'combines two streams by matching on a key. Three outputs: L, J and R.' Only 12 and 36 appear on both sides, so they go to J; 33 goes to L and 2 goes to R." },
   { q: "Append Fields slide: 3 store supply-request rows are appended to 2 warehouse rows. How many rows come out?",
     o: ["6", "5", "3", "2"], c: 0,
-    why: "Worked out from the review's rule: Append Fields 'pairs every row of one stream with every row of another. Row counts multiply.' 3 × 2 = 6." }
+    why: "The Append Fields slide shows the two inputs. The earlier midterm review gives the rule: Append Fields 'pairs every row of one stream with every row of another. Row counts multiply.' 3 × 2 = 6." },
+  { q: "Dynamic Rename slide: 'Take Field Names from First Row of Data' turns Field1–Field4 into:",
+    o: ["Address, City, State, ZIP", "Address1, Address2, Address3, Address4", "Field1, Field2, Field3, Field4", "Street, Town, Region, Code"], c: 0,
+    why: "The first data row held 'Address, City, State, ZIP', and the slide shows those becoming the column headers." }
  ]
 },
 {
@@ -1446,33 +1769,36 @@ const ACTIVITIES = [
 /* ===== NOTES shown in the Notes tab ===== */
 const NOTES = {
  missing: [
+  "The practice quiz. The latest review says about 10% of the exam comes from it ('so work through it'), but it isn't in your files. Upload it and it can become its own tab.",
   "The STAR-model activity's dataset (InClass-Activity-STAR-Model-F26-DATA.xlsx) and worksheet (.docx) weren't attached, so there's no way to check model answers or the bonus ('one region is spelled two ways').",
   "Ch. 1's 'BSI Videos' exercise (airline rebooking) depends on a video that isn't in your files.",
-  "None of the 'Check Yourself' prompts (F26), the Ponniah exercises, or the Ch. 1 section review questions has a printed answer key. Those quiz answers come from the chapter/slide text and cite it.",
+  "None of the 'Check Yourself' prompts (F26), the Ponniah exercises, or the Ch. 1 case questions has a printed answer key. Those quiz answers come from the chapter/slide text and cite it.",
   "Several slides are diagrams only (BI evolution figures, star/snowflake diagrams, Inmon and Kimball model pictures, the data mart 'geography / function / market-bounded' slides). Nothing on them could be turned into a question."
  ],
  undefined: [
   "EII, EAI and EDR: the review uses them as labels for federation and propagation, but no document spells out what they stand for. (The integration slide also prints 'III' where the review says 'EII'.)",
-  "HOLAP: described on the review, never expanded.",
-  "3NF / third normal form: used on the review and integration slides, never defined.",
+  "HOLAP: described on the review as 'the hybrid', never expanded.",
+  "Third normal form (3NF): used on the review and integration slides, never defined.",
   "ELT: listed in the F26 'Key Terms for Exam 1', never explained anywhere.",
+  "Dropdown questions: the review lists them as a question type but doesn't show one.",
   "Degenerate (INVOICE_NUMBER, INVOICE_LINE in the STAR activity): used, not defined.",
-  "Conformed dimensions: used many times; Ponniah only describes the idea (a data element means the same thing in every mart).",
+  "Conformed dimensions: used on the slides and in Ponniah; the latest review just says marts must 'share the same dimensions'.",
   "Slowly Changing Dimension / 'Type 2 SCD': named in the F25 design example, never defined.",
   "Oper mart: the slide's definition is just 'an operational data mart.'",
   "Chargeback mechanism (twelve rules, rule 12) and grain: named, not explained.",
   "Geography-bounded, function-bounded and market-bound data (Data Mart slides): slide titles only."
  ],
  conflicts: [
-  "ODS: the review says 'staging for recent operational data on its way in; current, not historical.' The instructor manual says 'the database from which a business operates on an ongoing basis.' F26 says 'a staging area that also allows queries.' The drill uses the review's wording.",
+  "E. F. Codd's twelve rules: the latest review says they are 'about relational databases.' The Chaudhuri & Dayal paper says Codd et al. 'defines twelve rules for OLAP products.' For the exam, go with the review.",
+  "ODS: the review says 'a staging store for recent, current operational data on its way into the warehouse.' The instructor manual says 'the database from which a business operates on an ongoing basis.' F26 says 'a staging area that also allows queries.' The drill uses the review's wording.",
   "Data mart types: the review lists three (dependent, independent, hybrid). The F26 and Data Mart slides list four (adding virtual).",
-  "Two-tier: the review describes it as client → database. F26 and the instructor manual say the first two tiers (application and warehouse) share one machine.",
+  "Two-tier: the review describes it as client to database. F26 and the instructor manual say the first two tiers (application and warehouse) share one machine.",
   "Metadata types: Ponniah's 'operational metadata' (about source systems) is not the same as the OLAP paper's 'operational metadata' (lineage, usage stats, audit trails). The drill keeps Ponniah's meaning.",
   "The Star vs Snowflake comparison slide labels snowflake 'bottom up' and star 'top down', which cuts against the review (Kimball = bottom-up = star). It's left out of the drill.",
-  "The 7Ws slide deck labels Diagnostic analytics as 'What happened?'. The Week 2 deck corrects it to 'Why did it happen?', which is what the drill uses.",
-  "The review says roll-up aggregates 'up to a higher level of detail'. It means a higher level of summary (day → month → year), the opposite of drill-down."
+  "The 7Ws slide deck labels Diagnostic analytics as 'What happened?'. The Week 2 deck corrects it to 'Why did it happen?', which is what the drill uses."
  ],
  skipped: [
+  "Facts the latest review dropped but the earlier review had (Join's L/J/R outputs, Union, Append Fields, Unique, Browse, 'join makes it wider, union makes it longer') are still in the drill. They cite the earlier review and aren't tagged 'On review sheet', so they come up after the latest review's facts.",
   "Market-size forecasts on the Week 1 slides (IDC $189.1B, $274.3B by 2022, $90B in 2021): dated vendor forecasts, not on the review.",
   "SSIS: it's in the integration slides and the drill, but the review never mentions it, so those items aren't tagged 'Review'."
  ]
@@ -1526,10 +1852,10 @@ const TOPIC = {}; TOPICS.forEach(t => TOPIC[t.k] = t);
 const GROUPS = {};
 ITEMS.forEach(it => { (GROUPS[it.g] = GROUPS[it.g] || []).push(it.a); });
 function optionsFor(it){
-  const seen = new Set([norm(it.a)]); it.alt.forEach(a => seen.add(norm(a)));
+  const K = x => stemTokens(norm(x)); const seen = new Set([K(it.a)]); it.alt.forEach(a => seen.add(K(a)));
   const pool = [];
   shuffle(GROUPS[it.g] || []).concat(shuffle(EXTRAS[it.g] || [])).forEach(a => {
-    const n = norm(a); if (!seen.has(n)) { seen.add(n); pool.push(a); }
+    const n = K(a); if (!seen.has(n)) { seen.add(n); pool.push(a); }
   });
   return pool.slice(0, 3);
 }
@@ -1594,7 +1920,7 @@ function renderMeta(){
   const exam = new Date(2026, 9, 6); const today = new Date(); today.setHours(0,0,0,0);
   const d = Math.round((exam - today) / 864e5);
   const when = d > 1 ? " · <b>" + d + " days away</b>" : d === 1 ? " · <b>tomorrow</b>" : d === 0 ? " · <b>today</b>" : "";
-  $("#examMeta").innerHTML = "Midterm Tue 10/6" + when + " · UTD Testing Center · register 48 hrs ahead · 2 hrs · one A4 sheet";
+  $("#examMeta").innerHTML = "Midterm Tue 10/6" + when + " · UTD Testing Center · 2 hrs · one A4 sheet · 55 graded Qs: MC, multiple answer, dropdown, matching, 5 T/F · ~60% DW + marts + ETL";
 }
 function applyTheme(){
   if (S.theme === "auto") document.documentElement.removeAttribute("data-theme");
@@ -1731,7 +2057,7 @@ function renderMatch(){
   const p = pool(); const chosen = []; const ex = new Set(); const answers = new Set();
   while (chosen.length < 5) {
     const it = pick(p, ex); if (!it) break; ex.add(it.id);
-    const n = norm(it.a); if (answers.has(n)) continue; answers.add(n); chosen.push(it);
+    const n = stemTokens(norm(it.a)); if (answers.has(n)) continue; answers.add(n); chosen.push(it);
   }
   if (!chosen.length) return renderEmpty();
   if (chosen.length === 1) { lastId = chosen[0].id; return renderFill(chosen[0]); }
@@ -1748,7 +2074,7 @@ function renderMatch(){
   const tryPair = () => {
     if (!selL || !selR) return;
     const L = $('[data-l="' + selL + '"]'), R = $('[data-r="' + selR + '"]'); const it = BYID[selL];
-    const ok = norm(BYID[selR].a) === norm(it.a);
+    const ok = stemTokens(norm(BYID[selR].a)) === stemTokens(norm(it.a));
     if (ok) {
       if (!missed.has(selL)) record(selL, true);
       [L, R].forEach(b => { b.classList.remove("sel"); b.classList.add("done"); if (missed.has(selL)) b.classList.add("missed"); b.disabled = true; });
@@ -1806,27 +2132,50 @@ function renderActivity(a){
 }
 function runQuiz(a){
   const order = a.qs.map((_, i) => i); let i = 0; const res = [];
+  const ansText = q => q.ma ? q.c.map(k => q.o[k]).join(" · ") : q.o[q.c];
   const show = () => {
     if (i >= order.length) return finish();
     const q = a.qs[order[i]]; const perm = shuffle(q.o.map((_, k) => k));
-    $("#astage").innerHTML = '<div class="card"><div class="qcount"><span>Question ' + (i + 1) + " of " + order.length + "</span><span>" + res.filter(Boolean).length + ' correct</span></div>' +
+    const isRight = k => q.ma ? q.c.indexOf(k) >= 0 : k === q.c;
+    $("#astage").innerHTML = '<div class="card"><div class="qcount"><span>Question ' + (i + 1) + " of " + order.length + (q.ma ? " · <b>Multiple answer</b>" : "") + "</span><span>" + res.filter(Boolean).length + ' correct</span></div>' +
       '<div class="qbar"><span style="width:' + (i / order.length * 100) + '%"></span></div>' +
-      '<p class="prompt">' + esc(q.q) + '</p><div class="opts">' + perm.map((k, j) => '<button class="opt" data-j="' + j + '"><span class="k">' + (j + 1) + "</span><span>" + esc(q.o[k]) + "</span></button>").join("") + "</div>" +
-      '<p class="hint">Press <kbd>1</kbd>–<kbd>' + perm.length + '</kbd> to answer.</p><div id="fb"></div></div>';
-    let done = false;
-    const choose = j => {
-      if (done || j < 0 || j >= perm.length) return; done = true;
-      const ok = perm[j] === q.c; res.push(ok);
-      $("#astage").querySelectorAll(".opt").forEach((b, jj) => { b.disabled = true;
-        if (perm[jj] === q.c) b.classList.add("right"); else if (jj === j) b.classList.add("wrong"); else b.classList.add("dim"); });
+      '<p class="prompt">' + esc(q.q) + '</p><div class="opts">' + perm.map((k, j) => '<button class="opt" data-j="' + j + '"' + (q.ma ? ' aria-pressed="false"' : "") + '><span class="k">' + (q.ma ? "" : (j + 1)) + "</span><span>" + esc(q.o[k]) + "</span></button>").join("") + "</div>" +
+      (q.ma ? '<div class="nextrow" style="justify-content:space-between"><span class="hint" style="margin:0">Tick every correct box (<kbd>1</kbd>–<kbd>' + perm.length + '</kbd> toggle), then <kbd>Enter</kbd>. A wrong box costs marks on the exam.</span><button class="btn" id="checkBtn">Check</button></div>'
+            : '<p class="hint">Press <kbd>1</kbd>–<kbd>' + perm.length + '</kbd> to answer.</p>') + '<div id="fb"></div></div>';
+    let done = false; const picked = new Set();
+    const reveal = (ok, extra) => {
       $("#fb").innerHTML = '<div class="fb ' + (ok ? "ok" : "no") + '" role="status"><div class="verdict"><span class="mark">' + (ok ? "✓" : "✕") + "</span>" + (ok ? "Correct" : "Not quite") + "</div>" +
-        (ok ? "" : '<div class="ans">Correct answer: <b>' + esc(q.o[q.c]) + "</b></div>") + '<div class="why">' + esc(q.why) + "</div></div>" +
+        (ok ? "" : '<div class="ans">Correct answer' + (q.ma ? "s" : "") + ": <b>" + esc(ansText(q)) + "</b></div>") + (extra || "") + '<div class="why">' + esc(q.why) + "</div></div>" +
         '<div class="nextrow"><span class="hint" style="margin:0"><kbd>Enter</kbd> for next</span><button class="btn" id="nextBtn">' + (i + 1 < order.length ? "Next →" : "See results") + "</button></div>";
       $("#nextBtn").onclick = () => { i++; show(); }; $("#nextBtn").focus({ preventScroll: true });
     };
-    $("#astage").querySelectorAll(".opt").forEach(b => b.onclick = () => choose(+b.dataset.j));
+    const choose = j => {
+      if (done || j < 0 || j >= perm.length) return; done = true;
+      const ok = isRight(perm[j]); res.push(ok);
+      $("#astage").querySelectorAll(".opt").forEach((b, jj) => { b.disabled = true;
+        if (isRight(perm[jj])) b.classList.add("right"); else if (jj === j) b.classList.add("wrong"); else b.classList.add("dim"); });
+      reveal(ok, ok ? "" : '<div class="sub">You picked: ' + esc(q.o[perm[j]]) + "</div>");
+    };
+    const toggle = j => {
+      if (done || j < 0 || j >= perm.length) return;
+      const b = $("#astage").querySelectorAll(".opt")[j];
+      if (picked.has(j)) { picked.delete(j); b.classList.remove("sel"); b.setAttribute("aria-pressed", "false"); b.querySelector(".k").textContent = ""; }
+      else { picked.add(j); b.classList.add("sel"); b.setAttribute("aria-pressed", "true"); b.querySelector(".k").textContent = "✓"; }
+    };
+    const check = () => {
+      if (done) return; if (!picked.size) { $("#fb").innerHTML = '<p class="hint">Tick at least one box first.</p>'; return; }
+      done = true; let hit = 0, wrong = 0;
+      $("#astage").querySelectorAll(".opt").forEach((b, jj) => { b.disabled = true; const r = isRight(perm[jj]), p = picked.has(jj); b.classList.remove("sel"); const kk = b.querySelector(".k"); kk.textContent = p ? (r ? "✓" : "✕") : "";
+        if (r && p) { hit++; b.classList.add("right"); } else if (!r && p) { wrong++; b.classList.add("wrong"); } else if (r && !p) { b.classList.add("right", "missedbox"); } else b.classList.add("dim"); });
+      const ok = hit === q.c.length && wrong === 0; res.push(ok);
+      $("#checkBtn").disabled = true;
+      reveal(ok, ok ? "" : '<div class="sub">You ticked ' + hit + " of " + q.c.length + " correct boxes" + (wrong ? " and " + wrong + " wrong box" + (wrong > 1 ? "es" : "") + " (those cost marks on the exam)" : "") + ".</div>");
+    };
+    $("#astage").querySelectorAll(".opt").forEach(b => b.onclick = () => q.ma ? toggle(+b.dataset.j) : choose(+b.dataset.j));
+    if (q.ma) $("#checkBtn").onclick = check;
     keyHandler = e => {
-      if (!done && /^[1-9]$/.test(e.key)) { e.preventDefault(); choose(+e.key - 1); }
+      if (!done && /^[1-9]$/.test(e.key)) { e.preventDefault(); q.ma ? toggle(+e.key - 1) : choose(+e.key - 1); }
+      else if (!done && q.ma && e.key === "Enter") { e.preventDefault(); check(); }
       else if (done && (e.key === "Enter" || e.key === "ArrowRight")) { e.preventDefault(); i++; show(); }
     };
   };
@@ -1835,7 +2184,7 @@ function runQuiz(a){
     st.last = score; st.best = Math.max(st.best || 0, score); S.acts[a.id] = st; save();
     keyHandler = null;
     $("#astage").innerHTML = '<div class="card"><p class="score">' + score + " / " + order.length + '</p><p class="hint" style="margin-top:4px">Best so far: ' + st.best + " / " + order.length + "</p>" +
-      '<ul class="review">' + order.map((k, n) => { const q = a.qs[k]; return '<li class="' + (res[n] ? "" : "miss") + '"><div class="rq">' + (res[n] ? "✓ " : "✕ ") + esc(q.q) + '</div><div class="ra">' + esc(q.o[q.c]) + "</div></li>"; }).join("") + "</ul>" +
+      '<ul class="review">' + order.map((k, n) => { const q = a.qs[k]; return '<li class="' + (res[n] ? "" : "miss") + '"><div class="rq">' + (res[n] ? "✓ " : "✕ ") + esc(q.q) + '</div><div class="ra">' + esc(ansText(q)) + "</div></li>"; }).join("") + "</ul>" +
       '<div class="nextrow"><button class="btn" id="again">Retake</button></div></div>';
     $("#again").onclick = () => renderActivity(a);
   };
@@ -1879,14 +2228,14 @@ function renderNotes(){
   const list = arr => "<ul>" + arr.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
   const revCount = ITEMS.filter(i => i.r).length;
   $("#main").innerHTML = '<div class="notes" style="max-width:820px"><h2>About this deck</h2>' +
-    '<p class="hint" style="font-size:.92rem">' + ITEMS.length + " drill items, " + revCount + " of them straight from the Midterm Review (tagged 'On review sheet'). New items come up in this order: review-sheet facts from HEAVY topics first, then other review facts, then everything else. Every item cites the document it came from.</p>" +
+    '<p class="hint" style="font-size:.92rem">' + ITEMS.length + " drill items, " + revCount + " of them straight from the latest Midterm Review (tagged 'On review sheet'). New items come up in this order: review-sheet facts from HEAVY topics first, then other review facts, then everything else. Every item cites the document it came from.</p>" +
     '<section><h3>Where the questions came from</h3><table class="srcs"><thead><tr><th>Document</th><th>Quiz tabs</th><th>Drill items</th></tr></thead><tbody>' +
       Object.keys(SOURCES).map(k => "<tr><td>" + esc(SOURCES[k]) + "</td><td>" + esc((actBySrc[k] || []).join(", ") || "—") + "</td><td>" + (bySrc[k] || 0) + "</td></tr>").join("") +
       "<tr><td>OLAP-doc.pdf (second copy)</td><td>—</td><td>Identical file; used once</td></tr></tbody></table></section>" +
     "<section><h3>Missing from your materials</h3>" + list(NOTES.missing) + "</section>" +
     "<section><h3>Named but never defined</h3>" + list(NOTES.undefined) + "</section>" +
     "<section><h3>Places your documents disagree</h3>" + list(NOTES.conflicts) + "</section>" +
-    "<section><h3>Left out on purpose</h3>" + list(NOTES.skipped) + "</section></div>";
+    "<section><h3>What is and isn't included</h3>" + list(NOTES.skipped) + "</section></div>";
 }
 
 /* ---------- boot ---------- */
